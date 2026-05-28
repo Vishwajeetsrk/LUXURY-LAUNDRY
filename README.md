@@ -76,10 +76,13 @@ The website will be at **http://localhost:3000**
 
 ## 🔑 Demo Credentials
 
+> Note: Admin password/credentials must match the values created by `backend/create-admin.ts`.
+
 | Role     | Email               | Password   |
 |----------|---------------------|------------|
-| Admin    | admin@luxwash.com   | admin123   |
-| Customer | rahul@example.com   | customer123|
+| Admin (SUPER_ADMIN) | vishwajeetsrk@gmail.com | 12345678 |
+| Customer | (Register via website) | (Set during registration) |
+
 
 ## 📄 Pages
 
