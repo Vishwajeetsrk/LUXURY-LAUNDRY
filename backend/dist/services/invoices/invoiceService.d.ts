@@ -41,10 +41,10 @@ export declare function createInvoiceFromOrder(orderId: string, input: {
         createdAt: Date;
         quantity: number;
         unit: string;
+        invoiceId: string;
         serviceName: string;
         unitPrice: number;
         totalPrice: number;
-        invoiceId: string;
     }[];
 } & {
     id: string;
@@ -106,10 +106,10 @@ export declare function createManualInvoice(input: {
         createdAt: Date;
         quantity: number;
         unit: string;
+        invoiceId: string;
         serviceName: string;
         unitPrice: number;
         totalPrice: number;
-        invoiceId: string;
     }[];
 } & {
     id: string;
@@ -157,10 +157,10 @@ export declare function listInvoices(query: InvoiceListQuery): Promise<{
             createdAt: Date;
             quantity: number;
             unit: string;
+            invoiceId: string;
             serviceName: string;
             unitPrice: number;
             totalPrice: number;
-            invoiceId: string;
         }[];
     } & {
         id: string;
@@ -214,10 +214,10 @@ export declare function listCustomerInvoices(customerId: string): Promise<({
         createdAt: Date;
         quantity: number;
         unit: string;
+        invoiceId: string;
         serviceName: string;
         unitPrice: number;
         totalPrice: number;
-        invoiceId: string;
     }[];
 } & {
     id: string;
@@ -264,10 +264,10 @@ export declare function findInvoiceForUser(invoiceId: string, user: AuthUser): P
         createdAt: Date;
         quantity: number;
         unit: string;
+        invoiceId: string;
         serviceName: string;
         unitPrice: number;
         totalPrice: number;
-        invoiceId: string;
     }[];
 } & {
     id: string;
@@ -319,10 +319,10 @@ export declare function updateInvoiceStatus(invoiceId: string, input: {
         createdAt: Date;
         quantity: number;
         unit: string;
+        invoiceId: string;
         serviceName: string;
         unitPrice: number;
         totalPrice: number;
-        invoiceId: string;
     }[];
 } & {
     id: string;

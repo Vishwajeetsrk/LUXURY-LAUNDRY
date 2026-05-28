@@ -39,7 +39,7 @@ router.get("/stats", authenticate, requirePermission("dashboard:read"), async (r
     }
 
     // Populate actual revenue
-    allCompletedOrders.forEach(order => {
+    allCompletedOrders.forEach((order: { createdAt: Date; totalAmount: number }) => {
       const d = new Date(order.createdAt);
       const key = `${months[d.getMonth()]} ${d.getFullYear()}`;
       if (revenueByMonth[key] !== undefined) {
@@ -47,19 +47,19 @@ router.get("/stats", authenticate, requirePermission("dashboard:read"), async (r
       }
     });
 
-    const chartData = Object.keys(revenueByMonth).map(key => ({
+    const chartData = Object.keys(revenueByMonth).map((key: string) => ({
       month: key,
-      revenue: revenueByMonth[key]
+      revenue: revenueByMonth[key],
     }));
 
     res.json({
       totalOrders,
       totalCustomers,
-      totalRevenue: revenueResult._sum.totalAmount || 0,
+      totalRevenue: (revenueResult as any)?._sum?.totalAmount || 0,
       totalServices,
       pendingOrders,
       chartData,
-      recentOrders: recentOrders.map((o) => ({
+      recentOrders: recentOrders.map((o: any) => ({
         id: o.id,
         customerName: o.customer.name,
         serviceName: o.service.name,
@@ -68,6 +68,7 @@ router.get("/stats", authenticate, requirePermission("dashboard:read"), async (r
         createdAt: o.createdAt,
       })),
     });
+
   } catch (err) {
     console.error("Dashboard stats error:", err);
     res.status(500).json({ message: "Server error" });

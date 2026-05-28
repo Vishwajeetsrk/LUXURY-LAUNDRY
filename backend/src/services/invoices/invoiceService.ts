@@ -183,6 +183,7 @@ export async function createManualInvoice(input: {
 
 function buildInvoiceWhere(query: InvoiceListQuery): Prisma.InvoiceWhereInput {
   const where: Prisma.InvoiceWhereInput = {};
+
   if (!query.includeArchived) where.archivedAt = null;
   if (query.status) where.invoiceStatus = query.status;
   if (query.paymentStatus) where.paymentStatus = query.paymentStatus;

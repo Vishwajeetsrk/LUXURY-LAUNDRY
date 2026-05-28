@@ -39,21 +39,21 @@ router.get("/stats", auth_1.authenticate, (0, auth_1.requirePermission)("dashboa
             revenueByMonth[`${months[d.getMonth()]} ${d.getFullYear()}`] = 0;
         }
         // Populate actual revenue
-        allCompletedOrders.forEach(order => {
+        allCompletedOrders.forEach((order) => {
             const d = new Date(order.createdAt);
             const key = `${months[d.getMonth()]} ${d.getFullYear()}`;
             if (revenueByMonth[key] !== undefined) {
                 revenueByMonth[key] += order.totalAmount;
             }
         });
-        const chartData = Object.keys(revenueByMonth).map(key => ({
+        const chartData = Object.keys(revenueByMonth).map((key) => ({
             month: key,
-            revenue: revenueByMonth[key]
+            revenue: revenueByMonth[key],
         }));
         res.json({
             totalOrders,
             totalCustomers,
-            totalRevenue: revenueResult._sum.totalAmount || 0,
+            totalRevenue: revenueResult?._sum?.totalAmount || 0,
             totalServices,
             pendingOrders,
             chartData,
