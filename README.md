@@ -43,10 +43,31 @@ LAUNDRYYY/
 - Node.js 18+ installed
 - npm or yarn
 
+### Environment Variables
+The backend needs:
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `PORT` (optional; default `5000`)
+- `FRONTEND_URL` (CORS allowlist; optional)
+
+The frontend needs:
+- `NEXT_PUBLIC_API_URL` (e.g. `http://localhost:5000`)
+
+
 ### 1. Backend Setup
+
+Create a `.env` file inside `backend/` with at least:
+
+```env
+DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/luxury_laundry
+JWT_SECRET=your_jwt_secret
+PORT=5000
+FRONTEND_URL=http://localhost:3000
+```
 
 ```bash
 cd backend
+
 
 # Install dependencies
 npm install
