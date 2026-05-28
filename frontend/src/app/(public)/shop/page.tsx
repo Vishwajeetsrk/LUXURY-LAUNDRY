@@ -88,16 +88,21 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    let cancelled = false;
 
-    // Try shop-products first, fall back to services
-    fetch(`${API}/api/shop-products`)
-      .then(res => res.json())
-      .then(data => {
-        const list = Array.isArray(data) ? data : [];
-        if (list.length > 0) {
-          // Shop products from admin
-          const mapped = list.map((p: any) => ({
+    const load = async () => {
+      try {
+        const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+        // 1) Try shop-products first
+        const shopRes = await fetch(`${API}/api/shop-products`);
+        if (!shopRes.ok) throw new Error(`shop-products failed: ${shopRes.status}`);
+
+        const shopData = await shopRes.json();
+        const shopList = Array.isArray(shopData) ? shopData : [];
+
+        if (shopList.length > 0) {
+          const mapped = shopList.map((p: any) => ({
             id: p.id,
             name: p.name,
             price: p.price,
@@ -105,39 +110,52 @@ export default function ShopPage() {
             image: p.image || "/images/wash_fold.png",
             badge: p.badge || null,
             badgeColor: p.badgeColor || "bg-green-500",
-            rating: 4.8 + (Math.random() * 0.2),
+            rating: 4.8 + Math.random() * 0.2,
             reviews: Math.floor(Math.random() * 300) + 50,
             description: p.description || "Premium laundry service",
             unit: p.unit || "pack",
           }));
-          setDbServices(mapped);
-          setLoading(false);
-        } else {
-          // Fallback to services
-          return fetch(`${API}/api/services`)
-            .then(res => res.json())
-            .then(sData => {
-              const sList = Array.isArray(sData) ? sData : sData.data || [];
-              const mappedProducts = sList.map((s: any, idx: number) => ({
-                id: s.id,
-                name: s.name,
-                price: s.pricePerUnit,
-                originalPrice: s.pricePerUnit * 1.2,
-                image: s.imageUrl || "/images/wash_fold.png",
-                badge: idx === 0 ? "Best Seller" : idx === 1 ? "Premium" : null,
-                badgeColor: idx === 0 ? "bg-green-500" : "bg-primary-500",
-                rating: 4.8 + (Math.random() * 0.2),
-                reviews: Math.floor(Math.random() * 300) + 50,
-                description: s.description || "Premium laundry service",
-                unit: s.unit,
-              }));
-              setDbServices(mappedProducts);
-              setLoading(false);
-            });
+
+          if (!cancelled) setDbServices(mapped);
+          return;
         }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+
+        // 2) Fallback to active services
+        const servicesRes = await fetch(`${API}/api/services`);
+        if (!servicesRes.ok) throw new Error(`services failed: ${servicesRes.status}`);
+
+        const sData = await servicesRes.json();
+        const sList = Array.isArray(sData) ? sData : sData.data || [];
+
+        const activeServices = sList.filter((s: any) => s.isActive !== false);
+
+        const mappedProducts = activeServices.map((s: any, idx: number) => ({
+          id: s.id,
+          name: s.name,
+          price: s.pricePerUnit,
+          originalPrice: s.pricePerUnit * 1.2,
+          image: s.imageUrl || "/images/wash_fold.png",
+          badge: idx === 0 ? "Best Seller" : idx === 1 ? "Premium" : null,
+          badgeColor: idx === 0 ? "bg-green-500" : "bg-primary-500",
+          rating: 4.8 + Math.random() * 0.2,
+          reviews: Math.floor(Math.random() * 300) + 50,
+          description: s.description || "Premium laundry service",
+          unit: s.unit,
+        }));
+
+        if (!cancelled) setDbServices(mappedProducts);
+      } catch (e) {
+        console.error("Shop load error:", e);
+        if (!cancelled) setDbServices([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filteredAndSortedProducts = useMemo(() => {

@@ -37,7 +37,14 @@ LAUNDRYYY/
 └── README.md
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Local)
+
+### What’s already implemented (per code)
+- Public site pages (Home/Services/Pricing/About/Contact/Shop/News/Help)
+- User registration + login (role defaults to `CUSTOMER`)
+- Admin panel features behind JWT permissions (e.g. `/admin` pages read via permissions like `dashboard:read`, `customers:read`, etc.)
+
+
 
 ### Prerequisites
 - Node.js 18+ installed
@@ -79,7 +86,7 @@ npm run setup
 npm run dev
 ```
 
-The API will be running at **http://localhost:5001**
+The API will be running at **http://localhost:5000**
 
 ### 2. Frontend Setup
 
@@ -118,6 +125,7 @@ The website will be at **http://localhost:3000**
 - **Help** (`/help`) — FAQ accordion + support contacts
 
 ### Admin Dashboard (`/admin`)
+
 - **Dashboard** — Stats overview, recent orders, quick actions
 - **Orders** — View all orders, filter by status, update order status
 - **Customers** — View all registered customers with search
@@ -127,6 +135,9 @@ The website will be at **http://localhost:3000**
 - **Settings** — Business info, phone, email, social links
 
 ## 🛠️ API Endpoints
+
+> All protected routes use JWT (cookie `token` and/or `Authorization: Bearer <token>`).
+
 
 | Method | Endpoint              | Auth     | Description              |
 |--------|----------------------|----------|--------------------------|
@@ -159,16 +170,22 @@ The website will be at **http://localhost:3000**
 
 ## 💰 Services & Pricing
 
-| Service             | Price          |
-|---------------------|----------------|
-| Wash & Fold         | ₹110/kg        |
-| Wash & Steam Iron   | ₹165/kg        |
-| Premium Dry Cleaning| ₹220+/piece    |
-| Shoe Spa            | ₹149+/pair     |
-| Home Care Laundry   | ₹89+/piece     |
+> The admin panel manages the actual service prices (stored in the `Service` table). The values below are for the marketing/pricing summary shown on the website.
 
-**Free pickup & delivery** on orders above ₹499
-**₹100 pickup charge** for orders below ₹499
+| Service | Price (starting / per unit) |
+|---|---|
+| Wash & Fold | ₹110/kg |
+| Wash & Steam Iron | ₹165/kg |
+| Premium Dry Cleaning | ₹220+/piece |
+| Shoe Spa | ₹149+/pair |
+| Home Care Laundry | ₹89+/piece |
+
+**Free Pickup & Delivery**
+On orders above ₹10,000
+
+**₹100 Pickup Charge**
+For orders less than ₹10,000
+
 
 ## 📞 Business Information
 
