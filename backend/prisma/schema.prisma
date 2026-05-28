@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  phone     String?
+  role      String   @default("CUSTOMER") // SUPER_ADMIN, ADMIN, STAFF, DELIVERY, CUSTOMER
+  orders    Order[]
+  invoices  Invoice[]
+  auditLogs AuditLog[]
+  addresses          Json?      @default("[]")
+  subscriptionPlan   String?
+  discountPercentage Float      @default(0)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  deletedAt          DateTime?
+
+  subscriptionReqs SubscriptionRequest[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model SubscriptionRequest {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  plan      String
+  price     Float
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Order {
+  id           String   @id @default(cuid())
+  customer     User     @relation(fields: [customerId], references: [id])
+  customerId   String
+  service      Service  @relation(fields: [serviceId], references: [id])
+  serviceId    String
+  invoice      Invoice?
+  status       String   @default("PENDING")
+  quantity     Float
+  totalAmount  Float
+  pickupDate   DateTime?
+  deliveryDate DateTime?
+  address             String
+  deliveryInstructions String?
+  paymentMethod       String   @default("CASH")
+  notes               String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  deletedAt           DateTime?
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Service {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  pricePerUnit Float
+  unit         String
+  imageUrl     String?
+  isActive     Boolean  @default(true)
+  orders       Order[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@index([isActive])
+}
+
+model ShopProduct {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  price         Float
+  originalPrice Float?
+  image         String?
+  badge         String?
+  badgeColor    String?
+  category      String   @default("general")
+  unit          String   @default("pack")
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([category])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Content {
+  key   String @id
+  value String
+  type  String @default("text")
+}
+
+model SiteSettings {
+  key   String @id
+  value String
+}
+
+model InvoiceCounter {
+  id        String   @id @default(cuid())
+  year      Int      @unique
+  sequence  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id              String        @id @default(cuid())
+  invoiceNumber   String        @unique
+  order           Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  orderId         String?       @unique
+  customer        User          @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  customerId      String
+  subtotal        Float
+  taxableAmount   Float         @default(0)
+  gstRate         Float         @default(18)
+  cgstAmount      Float         @default(0)
+  sgstAmount      Float         @default(0)
+  taxAmount       Float
+  discountAmount  Float         @default(0)
+  deliveryCharge  Float         @default(0)
+  totalAmount     Float
+  paymentStatus   String        @default("UNPAID")
+  paymentMethod   String        @default("CASH")
+  invoiceStatus   String        @default("SENT")
+  notes           String?
+  generatedAt     DateTime      @default(now())
+  paidAt          DateTime?
+  dueDate         DateTime?
+  archivedAt      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  items           InvoiceItem[]
+
+  @@index([customerId])
+  @@index([paymentStatus])
+  @@index([invoiceStatus])
+  @@index([generatedAt])
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId   String
+  serviceName String
+  quantity    Float
+  unit        String
+  unitPrice   Float
+  totalPrice  Float
+  createdAt   DateTime @default(now())
+
+  @@index([invoiceId])
+}
+
+model WhatsAppLog {
+  id          String   @id @default(cuid())
+  phone       String
+  message     String
+  category    String
+  status      String   @default("LINK_CREATED")
+  clickUrl    String?
+  orderId     String?
+  invoiceId   String?
+  createdAt   DateTime @default(now())
+
+  @@index([category])
+  @@index([orderId])
+  @@index([invoiceId])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String
+  details   String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity])
+  @@index([createdAt])
+}

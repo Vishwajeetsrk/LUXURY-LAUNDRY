@@ -1,0 +1,1 @@
+{"version":3,"file":"generatePdf.d.ts","sourceRoot":"","sources":["../../../src/services/invoices/generatePdf.tsx"],"names":[],"mappings":"AAgCA,eAAO,MAAM,eAAe,GAAI,mCAAmC;IAAE,OAAO,EAAE,GAAG,CAAC;IAAC,UAAU,CAAC,EAAE,MAAM,CAAC;IAAC,QAAQ,CAAC,EAAE,MAAM,CAAA;CAAE,4CA6G1H,CAAC;AAEF,wBAAsB,wBAAwB,CAAC,OAAO,EAAE,GAAG,EAAE,UAAU,CAAC,EAAE,MAAM,EAAE,QAAQ,CAAC,EAAE,MAAM,kCAElG"}
