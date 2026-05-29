@@ -17,12 +17,12 @@ const priceCategories = [
     title: "MEN'S WEAR",
     icon: "fa-solid fa-shirt",
     items: [
-      { name: "Shirt/T-Shirt", icon: "fa-solid fa-shirt", dryClean: "200/200", steamIron: "20/20" },
-      { name: "Trouser/Jeans", icon: "fa-solid fa-tshirt", dryClean: "200/210", steamIron: "20/30" },
-      { name: "Coat", icon: "fa-solid fa-user-tie", dryClean: "350", steamIron: "60" },
-      { name: "Mens Suit 2/3 pcs", icon: "fa-solid fa-user-tie", dryClean: "450/550", steamIron: "80/100" },
-      { name: "Kurta/Pyjama", icon: "fa-solid fa-person", dryClean: "220+/200+", steamIron: "30+/20+" },
-      { name: "Achkan", icon: "fa-solid fa-crown", dryClean: "600", steamIron: "120" },
+      { name: "Shirt/T-Shirt", image: "/images/items/shirt.png", dryClean: "200/200", steamIron: "120/120" },
+      { name: "Trouser/Jeans", image: "/images/items/trouser.png", dryClean: "200/210", steamIron: "120/130" },
+      { name: "Coat", image: "/images/items/coat.png", dryClean: "350", steamIron: "160" },
+      { name: "Mens Suit 2/3 pcs", image: "/images/items/coat.png", dryClean: "450/550", steamIron: "180/100" },
+      { name: "Kurta/Pyjama", image: "/images/items/shirt.png", dryClean: "220+/200+", steamIron: "130+/120+" },
+      { name: "Achkan", image: "/images/items/coat.png", dryClean: "600", steamIron: "120" },
     ]
   },
   {
@@ -30,14 +30,14 @@ const priceCategories = [
     subtitle: "(Delivery within 3 days)",
     icon: "fa-solid fa-person-dress",
     items: [
-      { name: "Kurta", icon: "fa-solid fa-person-dress", dryClean: "220+", steamIron: "30+" },
-      { name: "Salwar/Plazo", icon: "fa-solid fa-person-dress", dryClean: "200/200+", steamIron: "20/20+" },
-      { name: "Dupatta", icon: "fa-solid fa-scarf", dryClean: "170+", steamIron: "20+" },
-      { name: "Saree/Blouse", icon: "fa-solid fa-person-dress", dryClean: "375+/210+", steamIron: "70+/30+" },
-      { name: "Dress", icon: "fa-solid fa-person-dress", dryClean: "400+", steamIron: "70+" },
-      { name: "Top", icon: "fa-solid fa-shirt", dryClean: "220+", steamIron: "30+" },
-      { name: "Lehenga", icon: "fa-solid fa-crown", dryClean: "650+", steamIron: "130+" },
-      { name: "Skirt", icon: "fa-solid fa-person-dress", dryClean: "310+", steamIron: "50+" },
+      { name: "Kurta", image: "/images/items/dress.png", dryClean: "220+", steamIron: "130+" },
+      { name: "Salwar/Plazo", image: "/images/items/dress.png", dryClean: "200/200+", steamIron: "120/120+" },
+      { name: "Dupatta", image: "/images/items/dress.png", dryClean: "170+", steamIron: "120+" },
+      { name: "Saree/Blouse", image: "/images/items/dress.png", dryClean: "375+/210+", steamIron: "170+/130+" },
+      { name: "Dress", image: "/images/items/dress.png", dryClean: "400+", steamIron: "170+" },
+      { name: "Top", image: "/images/items/shirt.png", dryClean: "220+", steamIron: "130+" },
+      { name: "Lehenga", image: "/images/items/dress.png", dryClean: "650+", steamIron: "130+" },
+      { name: "Skirt", image: "/images/items/dress.png", dryClean: "310+", steamIron: "150+" },
     ]
   },
   {
@@ -45,58 +45,58 @@ const priceCategories = [
     subtitle: "(Delivery within 3 days)",
     icon: "fa-solid fa-mitten",
     items: [
-      { name: "Jacket F/H Sleeves", icon: "fa-solid fa-vest", dryClean: "375+/310", steamIron: "70+/50" },
-      { name: "Sweater F/H Sleeves", icon: "fa-solid fa-shirt", dryClean: "280+/240", steamIron: "40+/30" },
-      { name: "Sweat Shirt", icon: "fa-solid fa-tshirt", dryClean: "330", steamIron: "60" },
-      { name: "Long Coat", icon: "fa-solid fa-user-tie", dryClean: "480", steamIron: "90" },
-      { name: "Shawl/Pashmina", icon: "fa-solid fa-scarf", dryClean: "280+/610", steamIron: "40+/120" },
-      { name: "Leather Jacket", icon: "fa-solid fa-vest-patches", dryClean: "600", steamIron: "120" },
+      { name: "Jacket F/H Sleeves", image: "/images/items/coat.png", dryClean: "375+/310", steamIron: "170+/150" },
+      { name: "Sweater F/H Sleeves", image: "/images/items/sweater.png", dryClean: "280+/240", steamIron: "140+/130" },
+      { name: "Sweat Shirt", image: "/images/items/sweater.png", dryClean: "330", steamIron: "160" },
+      { name: "Long Coat", image: "/images/items/coat.png", dryClean: "480", steamIron: "190" },
+      { name: "Shawl/Pashmina", image: "/images/items/blanket.png", dryClean: "280+/610", steamIron: "140+/120" },
+      { name: "Leather Jacket", image: "/images/items/coat.png", dryClean: "600", steamIron: "120" },
     ]
   },
   {
     title: "HOUSEHOLD ITEMS",
     icon: "fa-solid fa-house",
     items: [
-      { name: "Blanket Single 1/2 Ply", icon: "fa-solid fa-bed", dryClean: "450/540", steamIron: null },
-      { name: "Blanket Double 1/2 Ply", icon: "fa-solid fa-bed", dryClean: "550/660", steamIron: null },
-      { name: "Quilt Single/Double", icon: "fa-solid fa-bed", dryClean: "450/550", steamIron: null },
-      { name: "Duvet", icon: "fa-solid fa-bed", dryClean: "180+", steamIron: null },
-      { name: "Curtain Door/Window (Without Lining)", icon: "fa-solid fa-person-shelter", dryClean: "265+", steamIron: null },
-      { name: "Curtain Door/Window (With Lining)", icon: "fa-solid fa-person-shelter", dryClean: "390+", steamIron: null },
-      { name: "Bed Sheet Single/Double", icon: "fa-solid fa-bed", dryClean: "220/300", steamIron: null },
-      { name: "Carpet", icon: "fa-solid fa-rug", dryClean: "145/Sq Ft", steamIron: null },
-      { name: "Blind", icon: "fa-solid fa-person-shelter", dryClean: "320+", steamIron: null },
+      { name: "Blanket Single 1/2 Ply", image: "/images/items/blanket.png", dryClean: "450/540", steamIron: null },
+      { name: "Blanket Double 1/2 Ply", image: "/images/items/blanket.png", dryClean: "550/660", steamIron: null },
+      { name: "Quilt Single/Double", image: "/images/items/blanket.png", dryClean: "450/550", steamIron: null },
+      { name: "Duvet", image: "/images/items/blanket.png", dryClean: "180+", steamIron: null },
+      { name: "Curtain Door/Window (Without Lining)", image: "/images/items/curtain.png", dryClean: "265+", steamIron: null },
+      { name: "Curtain Door/Window (With Lining)", image: "/images/items/curtain.png", dryClean: "390+", steamIron: null },
+      { name: "Bed Sheet Single/Double", image: "/images/items/blanket.png", dryClean: "220/300", steamIron: null },
+      { name: "Carpet", image: "/images/items/blanket.png", dryClean: "145/Sq Ft", steamIron: null },
+      { name: "Blind", image: "/images/items/curtain.png", dryClean: "320+", steamIron: null },
     ]
   },
   {
     title: "SHOES",
     icon: "fa-solid fa-shoe-prints",
     items: [
-      { name: "Sports", icon: "fa-solid fa-shoe-prints", dryClean: "450", steamIron: null },
-      { name: "Canvas/Sneaker (Non Leather)", icon: "fa-solid fa-shoe-prints", dryClean: "450", steamIron: null },
-      { name: "Leather", icon: "fa-solid fa-shoe-prints", dryClean: "550", steamIron: null },
-      { name: "Suede Leather", icon: "fa-solid fa-shoe-prints", dryClean: "650", steamIron: null },
-      { name: "Boots", icon: "fa-solid fa-boot", dryClean: "740+", steamIron: null },
+      { name: "Sports", image: "/images/items/shoes.png", dryClean: "450", steamIron: null },
+      { name: "Canvas/Sneaker (Non Leather)", image: "/images/items/shoes.png", dryClean: "450", steamIron: null },
+      { name: "Leather", image: "/images/items/shoes.png", dryClean: "550", steamIron: null },
+      { name: "Suede Leather", image: "/images/items/shoes.png", dryClean: "650", steamIron: null },
+      { name: "Boots", image: "/images/items/shoes.png", dryClean: "740+", steamIron: null },
     ]
   },
   {
     title: "BAGS",
     icon: "fa-solid fa-bag-shopping",
     items: [
-      { name: "Handbag", icon: "fa-solid fa-bag-shopping", dryClean: "600+", steamIron: null },
-      { name: "Canvass/Jute/Cloth", icon: "fa-solid fa-bag-shopping", dryClean: "450+", steamIron: null },
-      { name: "Handbag Leather", icon: "fa-solid fa-bag-shopping", dryClean: "850+", steamIron: null },
-      { name: "Suit Case", icon: "fa-solid fa-suitcase", dryClean: "350+", steamIron: null },
-      { name: "Wallet", icon: "fa-solid fa-wallet", dryClean: "350+", steamIron: null },
+      { name: "Handbag", image: "/images/items/bag.png", dryClean: "600+", steamIron: null },
+      { name: "Canvass/Jute/Cloth", image: "/images/items/bag.png", dryClean: "450+", steamIron: null },
+      { name: "Handbag Leather", image: "/images/items/bag.png", dryClean: "850+", steamIron: null },
+      { name: "Suit Case", image: "/images/items/bag.png", dryClean: "350+", steamIron: null },
+      { name: "Wallet", image: "/images/items/bag.png", dryClean: "350+", steamIron: null },
     ]
   },
   {
     title: "LAUNDRY",
     icon: "fa-solid fa-jug-detergent",
     items: [
-      { name: "5 Garments Approx /Kg", icon: "fa-solid fa-basket-shopping", dryClean: "—", steamIron: null },
-      { name: "Wash & Steam Iron", icon: "fa-solid fa-jug-detergent", price: "135/Kg", steamIron: null },
-      { name: "Wash & Fold", icon: "fa-solid fa-tshirt", price: "85/Kg", steamIron: null },
+      { name: "5 Garments Approx /Kg", image: "/images/items/laundry_basket.png", dryClean: "—", steamIron: null },
+      { name: "Wash & Steam Iron", image: "/images/items/laundry_basket.png", price: "135/Kg", steamIron: null },
+      { name: "Wash & Fold", image: "/images/items/laundry_basket.png", price: "185/Kg", steamIron: null },
     ]
   }
 ];
@@ -332,8 +332,10 @@ export default function PricingPage() {
                     <tbody className="divide-y divide-gray-50">
                       {category.items.map((item: any, i) => (
                         <tr key={i} className="hover:bg-gray-50 transition-colors">
-                          <td className="py-3 px-4 text-gray-800 font-medium flex items-center gap-3">
-                            <i className={`${item.icon} text-gray-400 w-4 text-center`}></i>
+                          <td className="py-3 px-4 text-gray-800 font-medium flex items-center gap-4">
+                            <div className="w-10 h-10 relative flex-shrink-0 bg-gray-100 rounded-md overflow-hidden border border-gray-200">
+                              <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
+                            </div>
                             {item.name}
                           </td>
                           {category.title === "LAUNDRY" ? (
