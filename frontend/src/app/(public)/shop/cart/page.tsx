@@ -281,8 +281,12 @@ export default function CartPage() {
             <div className="lg:col-span-7 xl:col-span-8 space-y-4">
               {cart.map((item) => (
                 <div key={item.serviceId} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-center gap-6">
-                  <div className="w-20 h-20 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <i className="fa-solid fa-shirt text-2xl text-primary-500" />
+                  <div className="w-20 h-20 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden relative">
+                    {item.image ? (
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    ) : (
+                      <i className="fa-solid fa-shirt text-2xl text-primary-500" />
+                    )}
                   </div>
                   <div className="flex-grow text-center sm:text-left">
                     <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>

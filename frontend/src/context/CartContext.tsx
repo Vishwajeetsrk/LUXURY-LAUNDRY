@@ -8,6 +8,7 @@ export type CartItem = {
   pricePerUnit: number;
   unit: string;
   quantity: number;
+  image?: string;
 };
 
 interface CartContextType {

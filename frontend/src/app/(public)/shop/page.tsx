@@ -363,7 +363,8 @@ export default function ShopPage() {
                         serviceId: product.id,
                         name: product.name,
                         pricePerUnit: product.price,
-                        unit: product.unit || "pack/piece"
+                        unit: product.unit || "pack/piece",
+                        image: product.image
                       })}
                       className="bg-primary-500 hover:bg-primary-600 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5"
                     >
