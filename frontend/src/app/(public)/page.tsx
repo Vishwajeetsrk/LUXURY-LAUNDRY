@@ -8,6 +8,7 @@ import TextImageSections from "@/components/home/TextImageSections";
 import ServiceCardsSection from "@/components/home/ServiceCardsSection";
 import TrustBadgesSection from "@/components/home/TrustBadgesSection";
 import StatsSection from "@/components/home/StatsSection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
 import Link from "next/link";
 import { useContent } from "@/context/ContentContext";
 
@@ -59,7 +60,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. Trust Badges */}
+      {/* 7. Testimonials */}
+      <TestimonialsSection />
+
+      {/* 8. Trust Badges */}
       <TrustBadgesSection />
 
       {/* 8. Stats Section */}

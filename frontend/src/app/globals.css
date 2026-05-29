@@ -4,11 +4,11 @@
 @config "../../tailwind.config.ts";
 
 :root {
-  --primary: #0d6efd;
-  --primary-dark: #0a58ca;
-  --secondary: #6c757d;
-  --dark: #212529;
-  --light: #f8f9fa;
+  --primary: #D4AF37;
+  --primary-dark: #C9A227;
+  --secondary: #0B1F4D;
+  --dark: #0A0A0A;
+  --light: #F5F5F5;
   --white: #ffffff;
 }
 
@@ -30,9 +30,14 @@
   body {
     font-family: "Inter", system-ui, -apple-system, sans-serif;
     color: #212529;
-    background-color: #fff;
+    background-color: #FAFAFA;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+  }
+  
+  .dark body {
+    color: #F5F5F5;
+    background-color: #0A0A0A;
   }
 
   h1 {
@@ -57,32 +62,40 @@
 @layer components {
   /* ===== BUTTONS ===== */
   .btn {
-    @apply inline-flex items-center justify-center px-5 py-2.5 rounded font-medium transition-all duration-200 cursor-pointer text-sm;
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded font-medium transition-all duration-300 cursor-pointer text-sm shadow-sm;
   }
 
   .btn-primary {
-    @apply bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 shadow-sm hover:shadow-md;
+    @apply text-white hover:shadow-lg hover:-translate-y-0.5;
+    background: linear-gradient(135deg, #D4AF37, #E5C56E);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+  }
+
+  .btn-primary:active {
+    @apply scale-95;
   }
 
   .btn-primary-lg {
-    @apply bg-primary-500 text-white hover:bg-primary-600 px-7 py-3.5 text-base rounded font-semibold shadow-md hover:shadow-lg transition-all duration-200;
+    @apply text-white px-7 py-3.5 text-base rounded font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+    background: linear-gradient(135deg, #D4AF37, #E5C56E);
+    border: 1px solid rgba(212, 175, 55, 0.5);
   }
 
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-gray-600 active:bg-gray-700;
+    @apply bg-transparent border-2 border-navy-700 text-navy-700 dark:border-navy-400 dark:text-navy-400 hover:border-primary-500 hover:text-primary-500 hover:shadow-[0_0_15px_rgba(212,175,55,0.3)];
   }
 
   .btn-outline {
-    @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white;
+    @apply border-2 border-primary-500 text-primary-600 dark:text-primary-400 hover:bg-primary-500 hover:text-white dark:hover:text-white;
   }
 
   .btn-white {
-    @apply bg-white text-primary-600 hover:bg-gray-50 shadow-sm;
+    @apply bg-white text-navy-700 hover:bg-gray-50 shadow-sm border border-gray-100;
   }
 
   /* ===== NAVBAR ===== */
   .navbar {
-    @apply fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100 transition-shadow duration-300;
+    @apply fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800 transition-all duration-300;
   }
 
   .navbar.scrolled {
@@ -112,35 +125,35 @@
 
   /* ===== CARDS ===== */
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply bg-white dark:bg-[#121826]/80 backdrop-blur-md rounded-xl shadow-sm border border-gray-100 dark:border-[rgba(212,175,55,0.15)] overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-[rgba(212,175,55,0.3)];
   }
 
   .card-soft {
-    @apply bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:bg-white hover:shadow-md;
+    @apply bg-gray-50 dark:bg-[#161B22]/80 backdrop-blur-md rounded-xl p-6 border border-transparent dark:border-[rgba(255,255,255,0.05)] transition-all duration-300 hover:bg-white dark:hover:bg-[#1A202C]/90 hover:shadow-md hover:border-[rgba(212,175,55,0.2)];
   }
 
   /* ===== BADGES / TRUST ===== */
   .trust-badge {
-    @apply flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm border border-gray-100;
+    @apply flex items-center gap-2 p-4 bg-white dark:bg-[#121826] rounded-lg shadow-sm border border-gray-100 dark:border-gray-800;
   }
 
   /* ===== FORMS ===== */
   .form-input {
-    @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+    @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100;
   }
 
   .form-label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
   }
 
   /* ===== PARALLAX HEADER ===== */
   .page-hero {
-    @apply relative flex items-center justify-center min-h-[200px] bg-gray-800 overflow-hidden;
+    @apply relative flex items-center justify-center min-h-[200px] bg-navy-900 overflow-hidden;
   }
 
   .page-hero::before {
     content: "";
-    @apply absolute inset-0 bg-black/50 z-10;
+    @apply absolute inset-0 bg-navy-900/80 z-10;
   }
 
   .page-hero-content {
@@ -216,23 +229,24 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+    background: linear-gradient(135deg, #D4AF37, #E5C56E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .glass {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.15);
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    background: linear-gradient(135deg, #0B1F4D 0%, #040A1A 100%);
   }
 
   .section-bg-alt {
-    background-color: #f8f9fa;
+    @apply bg-gray-50 dark:bg-[#111111];
   }
 }
 
