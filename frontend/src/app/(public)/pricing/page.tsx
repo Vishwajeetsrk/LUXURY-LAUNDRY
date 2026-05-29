@@ -12,118 +12,54 @@ const packageStyles = [
   { color: "border-purple-300", btnClass: "border-2 border-purple-500 text-purple-600 hover:bg-purple-50" },
 ];
 
-const priceCategories = [
-  {
-    title: "MEN'S WEAR",
-    icon: "fa-solid fa-shirt",
-    items: [
-      { name: "Shirt/T-Shirt", image: "/images/items/shirt.png", dryClean: "200/200", steamIron: "20/20" },
-      { name: "Trouser/Jeans", image: "/images/items/trouser.png", dryClean: "200/210", steamIron: "20/30" },
-      { name: "Coat", image: "/images/items/coat.png", dryClean: "350", steamIron: "60" },
-      { name: "Mens Suit 2/3 pcs", image: "/images/items/coat.png", dryClean: "450/550", steamIron: "80/100" },
-      { name: "Kurta/Pyjama", image: "/images/items/shirt.png", dryClean: "220+/200+", steamIron: "30+/20+" },
-      { name: "Achkan", image: "/images/items/coat.png", dryClean: "600", steamIron: "120" },
-    ]
-  },
-  {
-    title: "WOMEN’S WEAR",
-    subtitle: "(Delivery within 3 days)",
-    icon: "fa-solid fa-person-dress",
-    items: [
-      { name: "Kurta", image: "/images/items/dress.png", dryClean: "220+", steamIron: "30+" },
-      { name: "Salwar/Plazo", image: "/images/items/dress.png", dryClean: "200/200+", steamIron: "20/20+" },
-      { name: "Dupatta", image: "/images/items/dress.png", dryClean: "170+", steamIron: "20+" },
-      { name: "Saree/Blouse", image: "/images/items/dress.png", dryClean: "375+/210+", steamIron: "70+/30+" },
-      { name: "Dress", image: "/images/items/dress.png", dryClean: "400+", steamIron: "70+" },
-      { name: "Top", image: "/images/items/shirt.png", dryClean: "220+", steamIron: "30+" },
-      { name: "Lehenga", image: "/images/items/dress.png", dryClean: "650+", steamIron: "130+" },
-      { name: "Skirt", image: "/images/items/dress.png", dryClean: "310+", steamIron: "50+" },
-    ]
-  },
-  {
-    title: "WOOLEN",
-    subtitle: "(Delivery within 3 days)",
-    icon: "fa-solid fa-mitten",
-    items: [
-      { name: "Jacket F/H Sleeves", image: "/images/items/coat.png", dryClean: "375+/310", steamIron: "70+/50" },
-      { name: "Sweater F/H Sleeves", image: "/images/items/sweater.png", dryClean: "280+/240", steamIron: "40+/30" },
-      { name: "Sweat Shirt", image: "/images/items/sweater.png", dryClean: "330", steamIron: "60" },
-      { name: "Long Coat", image: "/images/items/coat.png", dryClean: "480", steamIron: "90" },
-      { name: "Shawl/Pashmina", image: "/images/items/blanket.png", dryClean: "280+/610", steamIron: "40+/120" },
-      { name: "Leather Jacket", image: "/images/items/coat.png", dryClean: "600", steamIron: "120" },
-    ]
-  },
-  {
-    title: "HOUSEHOLD ITEMS",
-    icon: "fa-solid fa-house",
-    items: [
-      { name: "Blanket Single 1/2 Ply", image: "/images/items/blanket.png", dryClean: "450/540", steamIron: null },
-      { name: "Blanket Double 1/2 Ply", image: "/images/items/blanket.png", dryClean: "550/660", steamIron: null },
-      { name: "Quilt Single/Double", image: "/images/items/blanket.png", dryClean: "450/550", steamIron: null },
-      { name: "Duvet", image: "/images/items/blanket.png", dryClean: "180+", steamIron: null },
-      { name: "Curtain Door/Window (Without Lining)", image: "/images/items/curtain.png", dryClean: "265+", steamIron: null },
-      { name: "Curtain Door/Window (With Lining)", image: "/images/items/curtain.png", dryClean: "390+", steamIron: null },
-      { name: "Bed Sheet Single/Double", image: "/images/items/blanket.png", dryClean: "220/300", steamIron: null },
-      { name: "Carpet", image: "/images/items/blanket.png", dryClean: "145/Sq Ft", steamIron: null },
-      { name: "Blind", image: "/images/items/curtain.png", dryClean: "320+", steamIron: null },
-    ]
-  },
-  {
-    title: "SHOES",
-    icon: "fa-solid fa-shoe-prints",
-    items: [
-      { name: "Sports", image: "/images/items/shoes.png", dryClean: "450", steamIron: null },
-      { name: "Canvas/Sneaker (Non Leather)", image: "/images/items/shoes.png", dryClean: "450", steamIron: null },
-      { name: "Leather", image: "/images/items/shoes.png", dryClean: "550", steamIron: null },
-      { name: "Suede Leather", image: "/images/items/shoes.png", dryClean: "650", steamIron: null },
-      { name: "Boots", image: "/images/items/shoes.png", dryClean: "740+", steamIron: null },
-    ]
-  },
-  {
-    title: "BAGS",
-    icon: "fa-solid fa-bag-shopping",
-    items: [
-      { name: "Handbag", image: "/images/items/bag.png", dryClean: "600+", steamIron: null },
-      { name: "Canvass/Jute/Cloth", image: "/images/items/bag.png", dryClean: "450+", steamIron: null },
-      { name: "Handbag Leather", image: "/images/items/bag.png", dryClean: "850+", steamIron: null },
-      { name: "Suit Case", image: "/images/items/bag.png", dryClean: "350+", steamIron: null },
-      { name: "Wallet", image: "/images/items/bag.png", dryClean: "350+", steamIron: null },
-    ]
-  },
-  {
-    title: "LAUNDRY",
-    icon: "fa-solid fa-jug-detergent",
-    items: [
-      { name: "5 Garments Approx /Kg", image: "/images/items/laundry_basket.png", dryClean: "—", steamIron: null },
-      { name: "Wash & Steam Iron", image: "/images/items/laundry_basket.png", price: "135/Kg", steamIron: null },
-      { name: "Wash & Fold", image: "/images/items/laundry_basket.png", price: "85/Kg", steamIron: null },
-    ]
-  }
-];
+// We will group price list items by category dynamically
 
 export default function PricingPage() {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [packages, setPackages] = useState<any[]>([]);
+  const [priceList, setPriceList] = useState<any[]>([]);
   const [loadingPackages, setLoadingPackages] = useState(true);
 
   useEffect(() => {
     async function fetchPackages() {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${API_URL}/api/packages`);
-        if (res.ok) {
-          const data = await res.json();
+        const [pkgRes, listRes] = await Promise.all([
+          fetch(`${API_URL}/api/packages`),
+          fetch(`${API_URL}/api/price-list`)
+        ]);
+
+        if (pkgRes.ok) {
+          const data = await pkgRes.json();
           setPackages(data.data.filter((p: any) => p.isActive) || []);
         }
+        
+        if (listRes.ok) {
+          const listData = await listRes.json();
+          setPriceList(listData.filter((i: any) => i.isActive) || []);
+        }
       } catch (err) {
-        console.error("Failed to fetch packages", err);
+        console.error("Failed to fetch data", err);
       } finally {
         setLoadingPackages(false);
       }
     }
     fetchPackages();
   }, []);
+
+  const priceCategories = [
+    { title: "MEN'S WEAR", icon: "fa-solid fa-shirt", subtitle: "" },
+    { title: "WOMEN'S WEAR", icon: "fa-solid fa-person-dress", subtitle: "(Delivery within 3 days)" },
+    { title: "WOOLEN", icon: "fa-solid fa-mitten", subtitle: "(Delivery within 3 days)" },
+    { title: "HOUSEHOLD ITEMS", icon: "fa-solid fa-house", subtitle: "" },
+    { title: "SHOES", icon: "fa-solid fa-shoe-prints", subtitle: "" },
+    { title: "BAGS", icon: "fa-solid fa-bag-shopping", subtitle: "" },
+    { title: "LAUNDRY", icon: "fa-solid fa-jug-detergent", subtitle: "" },
+  ].map(cat => ({
+    ...cat,
+    items: priceList.filter(item => item.category === cat.title)
+  })).filter(cat => cat.items.length > 0);
 
   const handleSelectPlan = async (plan: any) => {
     const token = localStorage.getItem("token");
@@ -336,21 +272,21 @@ export default function PricingPage() {
                     </thead>
                     <tbody className="divide-y divide-gray-50">
                       {category.items.map((item: any, i) => (
-                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                        <tr key={item.id || i} className="hover:bg-gray-50 transition-colors">
                           <td className="py-3 px-4 text-gray-800 font-medium flex items-center gap-4">
                             <div className="w-10 h-10 relative flex-shrink-0 bg-gray-100 rounded-md overflow-hidden border border-gray-200">
-                              <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
+                              <img src={item.image || "/images/items/shirt.png"} alt={item.name} className="object-cover w-full h-full" />
                             </div>
                             {item.name}
                           </td>
                           {category.title === "LAUNDRY" ? (
-                            <td className="py-3 px-4 text-right text-gray-600 font-semibold">{item.price || item.dryClean}</td>
+                            <td className="py-3 px-4 text-right text-gray-600 font-semibold">{item.price || item.dryCleanPrice}</td>
                           ) : (
                             <>
-                              <td className="py-3 px-4 text-center text-primary-700 font-semibold">{item.dryClean !== "—" ? `₹${item.dryClean}` : "—"}</td>
-                              {category.items.some((itm: any) => itm.steamIron !== null) && (
+                              <td className="py-3 px-4 text-center text-primary-700 font-semibold">{item.dryCleanPrice ? `₹${item.dryCleanPrice}` : "—"}</td>
+                              {category.items.some((itm: any) => itm.steamIronPrice !== null) && (
                                 <td className="py-3 px-4 text-center text-gray-600 font-medium">
-                                  {item.steamIron ? `₹${item.steamIron}` : "—"}
+                                  {item.steamIronPrice ? `₹${item.steamIronPrice}` : "—"}
                                 </td>
                               )}
                             </>

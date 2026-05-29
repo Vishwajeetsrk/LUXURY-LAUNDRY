@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { io, Socket } from "socket.io-client";
 
 interface DashboardStats {
   totalOrders: number;
@@ -49,6 +50,35 @@ export default function AdminDashboard() {
     recentOrders: [],
   });
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
+
+  const handleDownloadReport = (type: "pdf" | "excel") => {
+    const token = localStorage.getItem("token");
+    let url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/reports/${type}?token=${token}`;
+    if (dateRange.startDate && dateRange.endDate) {
+      url += `&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`;
+    }
+    
+    // Using fetch to download
+    fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => {
+        if (!res.ok) throw new Error("Export failed");
+        return res.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `orders_report_${new Date().toISOString().split('T')[0]}.${type === "pdf" ? "pdf" : "xlsx"}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to download report");
+      });
+  };
 
   const fetchStats = useCallback(async () => {
     try {
@@ -70,14 +100,82 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchStats();
+    
+    // Set up Socket.IO connection for real-time updates
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const token = localStorage.getItem("token");
+    
+    let socket: Socket;
+    if (token) {
+      socket = io(API_URL, {
+        auth: { token }
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to real-time updates");
+      });
+
+      socket.on("dashboardUpdate", (data) => {
+        console.log("Dashboard updated via websocket!");
+        if (data.type === 'NEW_ORDER' || data.type === 'ORDER_STATUS_CHANGED') {
+          // Re-fetch stats when orders change
+          fetchStats();
+        }
+      });
+    }
+
+    // Fallback polling just in case socket disconnects
+    const pollInterval = setInterval(() => {
+      fetchStats();
+    }, 30000); // 30s polling fallback
+
+    return () => {
+      if (socket) socket.disconnect();
+      clearInterval(pollInterval);
+    };
   }, [fetchStats]);
 
   return (
     <div>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-black text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">Welcome back! Here&apos;s your business overview.</p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">Dashboard</h1>
+          <p className="text-sm text-gray-500 mt-1">Welcome back! Here&apos;s your business overview.</p>
+        </div>
+        
+        {/* Reports Download */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2">
+            <input 
+              type="date" 
+              className="border rounded px-2 py-1.5 text-sm"
+              value={dateRange.startDate}
+              onChange={(e) => setDateRange({...dateRange, startDate: e.target.value})}
+            />
+            <span className="text-gray-400">to</span>
+            <input 
+              type="date" 
+              className="border rounded px-2 py-1.5 text-sm"
+              value={dateRange.endDate}
+              onChange={(e) => setDateRange({...dateRange, endDate: e.target.value})}
+            />
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <button 
+              onClick={() => handleDownloadReport('pdf')}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100 font-semibold text-sm transition-colors"
+            >
+              <i className="fa-solid fa-file-pdf"></i> PDF
+            </button>
+            <button 
+              onClick={() => handleDownloadReport('excel')}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-1.5 bg-green-50 text-green-600 rounded hover:bg-green-100 font-semibold text-sm transition-colors"
+            >
+              <i className="fa-solid fa-file-excel"></i> Excel
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Stats Grid */}

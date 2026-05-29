@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 const statusColors: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
@@ -116,6 +117,32 @@ export default function AdminOrdersPage() {
     fetchOrders();
     fetchServices();
     fetchCustomers();
+    
+    // Set up Socket.IO connection for real-time updates
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const token = localStorage.getItem("token");
+    
+    let socket: Socket;
+    if (token) {
+      socket = io(API_URL, {
+        auth: { token }
+      });
+
+      socket.on("dashboardUpdate", (data) => {
+        if (data.type === 'NEW_ORDER' || data.type === 'ORDER_STATUS_CHANGED') {
+          fetchOrders();
+        }
+      });
+    }
+
+    const pollInterval = setInterval(() => {
+      fetchOrders();
+    }, 30000); // 30s polling fallback
+
+    return () => {
+      if (socket) socket.disconnect();
+      clearInterval(pollInterval);
+    };
   }, [fetchOrders, fetchServices, fetchCustomers]);
 
   const addOrder = async (e: React.FormEvent) => {

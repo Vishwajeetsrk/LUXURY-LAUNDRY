@@ -263,3 +263,20 @@ model Offer {
   @@index([isActive])
   @@index([code])
 }
+
+model PriceListItem {
+  id             String   @id @default(cuid())
+  category       String
+  name           String
+  dryCleanPrice  String?
+  steamIronPrice String?
+  price          String?
+  image          String?
+  isActive       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+}

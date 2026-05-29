@@ -19,6 +19,7 @@ const sidebarLinks: { href: string; label: string; icon: string; permission: Per
   { href: "/admin/subscriptions", label: "Subscriptions", icon: "fa-solid fa-crown", permission: "subscriptions:read" },
   { href: "/admin/customers", label: "Customers", icon: "fa-solid fa-users", permission: "customers:read" },
   { href: "/admin/services", label: "Services", icon: "fa-solid fa-concierge-bell", permission: "services:read" },
+  { href: "/admin/price-list", label: "Price List", icon: "fa-solid fa-tags", permission: "services:read" },
   { href: "/admin/packages", label: "Packages", icon: "fa-solid fa-box-open", permission: "packages:read" },
   { href: "/admin/offers", label: "Offers", icon: "fa-solid fa-tags", permission: "packages:read" },
   { href: "/admin/shop", label: "Shop Products", icon: "fa-solid fa-cart-shopping", permission: "shop:read" },

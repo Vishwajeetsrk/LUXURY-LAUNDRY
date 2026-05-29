@@ -42,6 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: "/dashboard", icon: "fa-solid fa-chart-pie", label: "Overview" },
     { href: "/dashboard/orders", icon: "fa-solid fa-shirt", label: "My Orders & History" },
     { href: "/dashboard/invoices", icon: "fa-solid fa-file-invoice", label: "My Invoices" },
+    { href: "/dashboard/wallet", icon: "fa-solid fa-wallet", label: "My Wallet" },
     { href: "/dashboard/profile", icon: "fa-solid fa-user", label: "My Profile" },
     { href: "/contactus", icon: "fa-solid fa-headset", label: "Support" },
   ];
