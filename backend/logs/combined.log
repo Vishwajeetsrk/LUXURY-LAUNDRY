@@ -573,3 +573,9 @@
 {"level":"info","message":"GET /api/health","service":"luxwash-backend","timestamp":"2026-05-28T16:29:11.089Z"}
 {"level":"info","message":"GET /","service":"luxwash-backend","timestamp":"2026-05-28T16:34:00.282Z"}
 {"level":"info","message":"GET /","service":"luxwash-backend","timestamp":"2026-05-28T16:34:17.041Z"}
+{"level":"info","message":"POST /api/auth/login","service":"luxwash-backend","timestamp":"2026-05-29T03:59:35.523Z"}
+{"level":"info","message":"GET /api/services","service":"luxwash-backend","timestamp":"2026-05-29T03:59:37.523Z"}
+{"level":"info","message":"POST /api/auth/register","service":"luxwash-backend","timestamp":"2026-05-29T03:59:37.765Z"}
+{"level":"info","message":"POST /api/orders","service":"luxwash-backend","timestamp":"2026-05-29T03:59:40.351Z"}
+{"level":"info","message":"GET /api/orders","service":"luxwash-backend","timestamp":"2026-05-29T03:59:51.255Z"}
+{"level":"info","message":"PATCH /api/orders/cmpqe82we000158ug53shw7lf","service":"luxwash-backend","timestamp":"2026-05-29T03:59:52.307Z"}
