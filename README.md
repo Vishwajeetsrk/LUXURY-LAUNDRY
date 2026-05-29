@@ -1,15 +1,41 @@
-# 🧺 LUXURY LAUNDRY — Full-Stack Application
+# 🧺 LUXURY LAUNDRY (Jaipur) — Full-Stack Application
 
-A modern, full-stack web application for **LuxWash Premium Laundry Service** built with Next.js, Express, Prisma, and SQLite.
+A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) built with Next.js 16, Express, Prisma, and PostgreSQL.
 
 ## 🏗️ Tech Stack
 
 | Layer     | Technology                              |
 |-----------|----------------------------------------|
-| Frontend  | Next.js 15, TypeScript, Tailwind CSS   |
+| Frontend  | Next.js 16.2 (Turbopack), TypeScript, Tailwind CSS |
 | Backend   | Express 5, TypeScript, Prisma 7        |
-| Database  | SQLite (via better-sqlite3 adapter)    |
+| Database  | PostgreSQL (via Prisma)                |
 | Auth      | JWT + bcrypt                           |
+
+## ✨ Comprehensive Feature List
+
+### 🛍️ User Features & User Dashboard (`/dashboard`)
+- **Authentication:** Secure Registration & Login with JWT.
+- **Profile Management:** Users can update their contact details and view their active subscription plans.
+- **Order Placement:** Users can book laundry services with specific pickup/delivery instructions.
+- **Order History (`/dashboard/orders`):** Track current order statuses (Pending, Processing, Delivered, etc.).
+- **Invoice Tracking (`/dashboard/invoices`):** View, download, and track payment status for past and current invoices.
+- **Shop & Cart (`/shop`):** Browse service packages, add items to cart, and checkout seamlessly.
+- **Subscriptions:** Request monthly/yearly laundry subscription plans.
+
+### 🛡️ Admin Dashboard (`/admin`)
+- **Overview Dashboard:** High-level statistics, revenue, recent orders, and quick actions.
+- **Order Management (`/admin/orders`):** View all customer orders, filter by status, update states, and assign delivery dates.
+- **Invoice Management (`/admin/invoices`):** 
+  - Automatically or manually generate invoices linked to orders.
+  - Detailed tax breakdowns (CGST/SGST applied).
+  - Track payment status (Paid, Unpaid, Overdue).
+  - Auto-generated sequential invoice numbers.
+- **Customer Management (`/admin/customers`):** View registered users, track their order history, and update their details/discounts.
+- **Service & Product Catalog (`/admin/services`, `/admin/shop`):** Add, edit, disable, or delete laundry services and shop products dynamically.
+- **Content Management System (`/admin/content`):** Dynamically edit website text, banners, and descriptions without touching code.
+- **WhatsApp Integration (`/admin/whatsapp`):** View logs of automated WhatsApp messages (order updates, invoice links) sent to customers via UltraMsg.
+- **Inquiries (`/admin/contacts`):** View and respond to customer queries from the Contact Us form.
+- **Site Settings (`/admin/settings`):** Global configurations like company phone, email, and social links.
 
 ## 📁 Project Structure
 
@@ -20,176 +46,80 @@ LAUNDRYYY/
 │   │   ├── app/
 │   │   │   ├── (public)/     # Public pages (Home, Services, Pricing, etc.)
 │   │   │   ├── admin/        # Admin dashboard
+│   │   │   ├── dashboard/    # User dashboard
 │   │   │   ├── login/        # Login page
 │   │   │   └── register/     # Register page
 │   │   └── components/       # Reusable components
 │   └── public/images/        # Image assets
 ├── backend/           # Express API backend
 │   ├── src/
-│   │   ├── routes/           # API routes (auth, orders, services, etc.)
+│   │   ├── routes/           # API routes (auth, orders, services, invoices)
 │   │   ├── middleware/       # JWT auth middleware
 │   │   └── lib/              # Prisma client
 │   ├── prisma/
-│   │   ├── schema.prisma     # Database schema
-│   │   ├── seed.ts           # Seed data
-│   │   └── dev.db            # SQLite database (auto-created)
+│   │   ├── schema.prisma     # PostgreSQL schema
+│   │   └── seed.ts           # Seed data
 │   └── generated/            # Prisma generated client
 └── README.md
 ```
 
 ## 🚀 Quick Start (Local)
 
-### What’s already implemented (per code)
-- Public site pages (Home/Services/Pricing/About/Contact/Shop/News/Help)
-- User registration + login (role defaults to `CUSTOMER`)
-- Admin panel features behind JWT permissions (e.g. `/admin` pages read via permissions like `dashboard:read`, `customers:read`, etc.)
-
-
-
 ### Prerequisites
 - Node.js 18+ installed
 - npm or yarn
+- A PostgreSQL Database (e.g., local Postgres or Supabase)
 
 ### Environment Variables
-The backend needs:
-- `DATABASE_URL`
-- `JWT_SECRET`
-- `PORT` (optional; default `5000`)
-- `FRONTEND_URL` (CORS allowlist; optional)
-
-The frontend needs:
-- `NEXT_PUBLIC_API_URL` (e.g. `http://localhost:5000`)
-
-
-### 1. Backend Setup
-
-Create a `.env` file inside `backend/` with at least:
-
+The backend needs a `.env` inside `backend/`:
 ```env
-DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/luxury_laundry
-JWT_SECRET=your_jwt_secret
+DATABASE_URL="postgresql://username:password@localhost:5432/db_name"
+JWT_SECRET="your_jwt_secret"
 PORT=5000
 FRONTEND_URL=http://localhost:3000
 ```
+The frontend needs a `.env` inside `frontend/`:
+```env
+NEXT_PUBLIC_API_URL="http://localhost:5000"
+```
+
+### 1. Backend Setup
 
 ```bash
 cd backend
-
-
-# Install dependencies
 npm install
-
-# Setup database (push schema + generate client + seed data)
-npm run setup
-
-# Start development server
+npm run setup  # push schema + generate client + seed data
 npm run dev
 ```
-
-The API will be running at **http://localhost:5000**
 
 ### 2. Frontend Setup
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-The website will be at **http://localhost:3000**
-
 ## 🔑 Demo Credentials
 
-> Note: Admin password/credentials must match the values created by `backend/create-admin.ts`.
+| Role     | Email                   | Password |
+|----------|-------------------------|----------|
+| Admin    | vishwajeetsrk@gmail.com | 12345678 |
 
-| Role     | Email               | Password   |
-|----------|---------------------|------------|
-| Admin (SUPER_ADMIN) | vishwajeetsrk@gmail.com | 12345678 |
-| Customer | (Register via website) | (Set during registration) |
+## 📊 Database Schema Highlights
 
-
-## 📄 Pages
-
-### Public Pages
-- **Home** (`/`) — Hero, services, stats, contact form, trust badges
-- **Services** (`/our-services`) — All 5 services with details & pricing
-- **Pricing** (`/pricing`) — 3-tier pricing cards + additional pricing
-- **About Us** (`/about-us`) — Company story, values, team
-- **Contact** (`/contactus`) — Contact form, business info, hours
-- **Shop** (`/shop`) — Service packs with ratings & cart
-- **News** (`/news`) — Blog posts
-- **Help** (`/help`) — FAQ accordion + support contacts
-
-### Admin Dashboard (`/admin`)
-
-- **Dashboard** — Stats overview, recent orders, quick actions
-- **Orders** — View all orders, filter by status, update order status
-- **Customers** — View all registered customers with search
-- **Services** — Add/edit/delete services, manage pricing
-- **Content** — CMS editor for website text content
-- **Inquiries** — View contact form submissions with reply
-- **Settings** — Business info, phone, email, social links
-
-## 🛠️ API Endpoints
-
-> All protected routes use JWT (cookie `token` and/or `Authorization: Bearer <token>`).
-
-
-| Method | Endpoint              | Auth     | Description              |
-|--------|----------------------|----------|--------------------------|
-| POST   | /api/auth/register   | Public   | Create new account       |
-| POST   | /api/auth/login      | Public   | Login and get JWT        |
-| GET    | /api/auth/me         | Auth     | Get current user         |
-| GET    | /api/services        | Public   | List all services        |
-| POST   | /api/services        | Admin    | Create service           |
-| PATCH  | /api/services/:id    | Admin    | Update service           |
-| DELETE | /api/services/:id    | Admin    | Delete service           |
-| GET    | /api/orders          | Auth     | List orders              |
-| POST   | /api/orders          | Auth     | Create order             |
-| PATCH  | /api/orders/:id      | Auth     | Update order status      |
-| DELETE | /api/orders/:id      | Admin    | Delete order             |
-| GET    | /api/customers       | Admin    | List all customers       |
-| POST   | /api/contact         | Public   | Submit contact form      |
-| GET    | /api/contact         | Admin    | View all submissions     |
-| GET    | /api/content         | Public   | Get page content         |
-| PATCH  | /api/content/:key    | Admin    | Update content           |
-| GET    | /api/dashboard/stats | Admin    | Dashboard statistics     |
-
-## 📊 Database Schema
-
-- **User** — id, name, email, password, phone, role (ADMIN/CUSTOMER)
-- **Service** — id, name, description, pricePerUnit, unit, isActive
-- **Order** — id, customer, service, status, quantity, totalAmount, address
-- **ContactSubmission** — id, name, email, phone, subject, message
-- **Content** — key-value content pairs for CMS
-- **SiteSettings** — key-value site configuration
-
-## 💰 Services & Pricing
-
-> The admin panel manages the actual service prices (stored in the `Service` table). The values below are for the marketing/pricing summary shown on the website.
-
-| Service | Price (starting / per unit) |
-|---|---|
-| Wash & Fold | ₹110/kg |
-| Wash & Steam Iron | ₹165/kg |
-| Premium Dry Cleaning | ₹220+/piece |
-| Shoe Spa | ₹149+/pair |
-| Home Care Laundry | ₹89+/piece |
-
-**Free Pickup & Delivery**
-On orders above ₹10,000
-
-**₹100 Pickup Charge**
-For orders less than ₹10,000
-
+- **User** — Customers, Staff, Delivery, Admins
+- **Order** — Customer orders for specific laundry services
+- **Service** & **ShopProduct** — Available offerings
+- **Invoice** & **InvoiceItem** — Advanced billing system with tax breakdowns (CGST/SGST)
+- **WhatsAppLog** — Tracking external WhatsApp communications
+- **AuditLog** — Tracking admin actions
+- **SubscriptionRequest** — Tracking user subscription plans
 
 ## 📞 Business Information
 
-- **Name**: LUXURY LAUNDRY. / LuxWash Premium Laundry
+- **Name**: LUXURY LAUNDRY / LuxWash Premium Laundry
+- **Website**: https://luxurylaundryjaipur.com
 - **Address**: Shop No. 504, Bagrota, Ajmer Road, Jaipur, Rajasthan
 - **Phone**: +91-9663574728
 - **Email**: support@luxwash.com
