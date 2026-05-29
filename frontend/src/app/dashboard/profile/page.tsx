@@ -9,6 +9,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", addresses: [] as string[] });
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -216,6 +217,62 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Wallet Section */}
+      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <i className="fa-solid fa-wallet text-primary-500"></i> My Wallet
+          </h2>
+        </div>
+        
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
+          <div>
+            <p className="text-sm text-gray-500 mb-1">Available Balance</p>
+            <p className="text-3xl font-black text-gray-900">₹{user.walletBalance?.toLocaleString('en-IN') || '0'}</p>
+          </div>
+          <button 
+            onClick={() => setShowWalletModal(true)}
+            className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            <i className="fa-solid fa-qrcode"></i> Add Funds via UPI
+          </button>
+        </div>
+      </div>
+
+      {/* Wallet Modal */}
+      {showWalletModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-xl relative">
+            <button 
+              onClick={() => setShowWalletModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <i className="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Add Funds to Wallet</h3>
+            <p className="text-sm text-gray-500 mb-6">Scan the QR code using any UPI app to pay.</p>
+            
+            <div className="bg-gray-100 p-4 rounded-xl mb-6 inline-block">
+              <img src="/qr.jpeg" alt="UPI QR Code" className="w-48 h-48 object-contain mx-auto mix-blend-multiply" />
+            </div>
+            
+            <div className="bg-amber-50 text-amber-800 p-4 rounded-lg text-sm text-left mb-6">
+              <p className="font-bold mb-1"><i className="fa-solid fa-circle-info mr-1"></i> Important Step</p>
+              <p>After successful payment, please share the screenshot with our admin on WhatsApp to update your wallet balance.</p>
+            </div>
+            
+            <a 
+              href="https://wa.me/919663574728?text=Hi,%20I%20have%20made%20a%20UPI%20payment%20to%20add%20funds%20to%20my%20wallet.%20Here%20is%20the%20screenshot:"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <i className="fa-brands fa-whatsapp text-lg"></i> Send Screenshot
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

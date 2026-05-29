@@ -80,7 +80,7 @@ const services = [
   {
     icon: "fa-solid fa-house",
     name: "Home Care Laundry",
-    price: "₹89+/piece",
+    price: "₹189+/piece",
     description:
       "Professional cleaning for your home items — curtains, bedsheets, sofa covers, carpets, and more. Fresh home, happy life.",
     features: [
