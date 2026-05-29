@@ -89,6 +89,7 @@ model Service {
   name         String
   description  String
   pricePerUnit Float
+  originalPrice Float?
   unit         String
   imageUrl     String?
   isActive     Boolean  @default(true)

@@ -157,8 +157,13 @@ export default function ShopPage() {
         const activeServices = sList.filter((s: any) => s.isActive !== false);
 
         const mappedProducts = activeServices.map((s: any, idx: number) => {
-          const discountPercent = getDiscountPercentage(s.name);
-          const origPrice = Math.round(s.pricePerUnit / (1 - discountPercent / 100));
+          let origPrice = s.originalPrice;
+          
+          if (!origPrice) {
+            const discountPercent = getDiscountPercentage(s.name);
+            origPrice = Math.round(s.pricePerUnit / (1 - discountPercent / 100));
+          }
+
           return {
             id: s.id,
             name: s.name,

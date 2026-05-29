@@ -8,9 +8,10 @@ interface Service {
   name: string;
   description: string;
   pricePerUnit: number;
+  originalPrice?: number | null;
   unit: string;
   isActive: boolean;
-  imageUrl?: string;
+  imageUrl?: string | null;
 }
 
 export default function AdminServicesPage() {
@@ -21,7 +22,7 @@ export default function AdminServicesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Service>>({});
   const [showAdd, setShowAdd] = useState(false);
-  const [addForm, setAddForm] = useState({ name: "", description: "", pricePerUnit: 0, unit: "kg" });
+  const [addForm, setAddForm] = useState({ name: "", description: "", pricePerUnit: 0, originalPrice: "", unit: "kg", imageUrl: "" });
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -36,7 +37,15 @@ export default function AdminServicesPage() {
 
   const startEdit = (s: Service) => {
     setEditingId(s.id);
-    setEditForm({ name: s.name, description: s.description, pricePerUnit: s.pricePerUnit, unit: s.unit, isActive: s.isActive });
+    setEditForm({ 
+      name: s.name, 
+      description: s.description, 
+      pricePerUnit: s.pricePerUnit, 
+      originalPrice: s.originalPrice || null,
+      unit: s.unit, 
+      isActive: s.isActive,
+      imageUrl: s.imageUrl || ""
+    });
   };
 
   const saveEdit = async () => {
@@ -68,7 +77,7 @@ export default function AdminServicesPage() {
         const created = await res.json();
         setServices((prev) => [...prev, created]);
         setShowAdd(false);
-        setAddForm({ name: "", description: "", pricePerUnit: 0, unit: "kg" });
+        setAddForm({ name: "", description: "", pricePerUnit: 0, originalPrice: "", unit: "kg", imageUrl: "" });
       }
     } catch { /* ignore */ }
   };
@@ -113,6 +122,10 @@ export default function AdminServicesPage() {
                 <label className="form-label">Price</label>
                 <input type="number" value={addForm.pricePerUnit} onChange={(e) => setAddForm({ ...addForm, pricePerUnit: Number(e.target.value) })} className="form-input" />
               </div>
+              <div className="flex-1">
+                <label className="form-label">Original Price (optional)</label>
+                <input type="number" value={addForm.originalPrice} onChange={(e) => setAddForm({ ...addForm, originalPrice: e.target.value })} className="form-input" placeholder="e.g. 500" />
+              </div>
               <div className="w-24">
                 <label className="form-label">Unit</label>
                 <select value={addForm.unit} onChange={(e) => setAddForm({ ...addForm, unit: e.target.value })} className="form-input">
@@ -122,6 +135,10 @@ export default function AdminServicesPage() {
                   <option value="sqft">per sq.ft</option>
                 </select>
               </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label className="form-label">Image URL</label>
+              <input type="text" value={addForm.imageUrl} onChange={(e) => setAddForm({ ...addForm, imageUrl: e.target.value })} className="form-input" placeholder="https://res.cloudinary.com/... or /images/shirt.png" />
             </div>
             <div className="sm:col-span-2">
               <label className="form-label">Description</label>
@@ -149,9 +166,10 @@ export default function AdminServicesPage() {
             <div key={service.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               {editingId === service.id ? (
                 <div className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <input type="text" value={editForm.name || ""} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className="form-input" />
-                    <input type="number" value={editForm.pricePerUnit || 0} onChange={(e) => setEditForm({ ...editForm, pricePerUnit: Number(e.target.value) })} className="form-input" />
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <input type="text" value={editForm.name || ""} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className="form-input" placeholder="Name" />
+                    <input type="number" value={editForm.pricePerUnit || 0} onChange={(e) => setEditForm({ ...editForm, pricePerUnit: Number(e.target.value) })} className="form-input" placeholder="Price" />
+                    <input type="number" value={editForm.originalPrice || ""} onChange={(e) => setEditForm({ ...editForm, originalPrice: e.target.value ? Number(e.target.value) : null })} className="form-input" placeholder="Original Price" />
                     <select value={editForm.unit || "kg"} onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })} className="form-input">
                       <option value="kg">per kg</option>
                       <option value="piece">per piece</option>
@@ -159,6 +177,7 @@ export default function AdminServicesPage() {
                       <option value="sqft">per sq.ft</option>
                     </select>
                   </div>
+                  <input type="text" value={editForm.imageUrl || ""} onChange={(e) => setEditForm({ ...editForm, imageUrl: e.target.value })} className="form-input" placeholder="Image URL (e.g. /images/shirt.png)" />
                   <textarea value={editForm.description || ""} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} className="form-input" rows={2} />
                   <div className="flex items-center gap-3">
                     <label className="flex items-center gap-2 cursor-pointer">
