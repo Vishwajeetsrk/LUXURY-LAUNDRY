@@ -34,7 +34,6 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "../context/CartContext";
 import { ContentProvider } from "../context/ContentContext";
-import { ThemeProvider } from "../components/ui/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -49,14 +48,12 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         />
       </head>
-      <body className={`${inter.variable} antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans selection:bg-primary-100 selection:text-primary-900 transition-colors duration-200`}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <ContentProvider>
-            <CartProvider>
-              {children}
-            </CartProvider>
-          </ContentProvider>
-        </ThemeProvider>
+      <body className={`${inter.variable} antialiased bg-gray-50 text-gray-900 font-sans selection:bg-primary-100 selection:text-primary-900 transition-colors duration-200`}>
+        <ContentProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </ContentProvider>
       </body>
     </html>
   );

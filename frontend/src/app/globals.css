@@ -12,10 +12,6 @@
   --white: #ffffff;
 }
 
-.dark {
-  color-scheme: dark;
-}
-
 @layer base {
   * {
     box-sizing: border-box;
@@ -33,11 +29,6 @@
     background-color: #FAFAFA;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-  }
-  
-  .dark body {
-    color: #F5F5F5;
-    background-color: #0A0A0A;
   }
 
   h1 {
