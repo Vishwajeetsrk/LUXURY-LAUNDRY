@@ -93,7 +93,7 @@ export default function TextImageSections() {
               <ul className="space-y-3 mb-8">
                 {[
                   "Expert fabric care for all garment types",
-                  "Free pickup & delivery above ₹10,000",
+                  "Free pickup & delivery above ₹4,999",
                   "24–48 hour express turnaround",
                   "100% safe and hygienic process",
                 ].map((item) => (

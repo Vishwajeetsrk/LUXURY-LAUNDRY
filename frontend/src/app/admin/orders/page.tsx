@@ -1,19 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const statusColors: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
-  CONFIRMED: "bg-blue-100 text-blue-800",
-  PICKED_UP: "bg-indigo-100 text-indigo-800",
-  PROCESSING: "bg-cyan-100 text-cyan-800",
+  PICKUP_REQUESTED: "bg-blue-100 text-blue-800",
+  COLLECTED: "bg-indigo-100 text-indigo-800",
+  IN_CLEANING: "bg-purple-100 text-purple-800",
   READY: "bg-teal-100 text-teal-800",
   OUT_FOR_DELIVERY: "bg-orange-100 text-orange-800",
   DELIVERED: "bg-green-100 text-green-800",
-  CANCELLED: "bg-red-100 text-red-800",
+  PAYMENT_PENDING: "bg-red-100 text-red-800",
+  PAYMENT_COMPLETED: "bg-emerald-100 text-emerald-800",
+  CANCELLED: "bg-gray-200 text-gray-800",
 };
 
-const allStatuses = ["PENDING", "CONFIRMED", "PICKED_UP", "PROCESSING", "READY", "OUT_FOR_DELIVERY", "DELIVERED", "CANCELLED"];
+const allStatuses = [
+  "PENDING",
+  "PICKUP_REQUESTED",
+  "COLLECTED",
+  "IN_CLEANING",
+  "READY",
+  "OUT_FOR_DELIVERY",
+  "DELIVERED",
+  "PAYMENT_PENDING",
+  "PAYMENT_COMPLETED",
+  "CANCELLED"
+];
 
 interface Order {
   id: string;
@@ -61,13 +74,7 @@ export default function AdminOrdersPage() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => {
-    fetchOrders();
-    fetchServices();
-    fetchCustomers();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/orders`, {
@@ -80,9 +87,9 @@ export default function AdminOrdersPage() {
     } catch { /* ignore */ } finally {
       setLoading(false);
     }
-  };
+  }, [API]);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       const res = await fetch(`${API}/api/services`);
       if (res.ok) {
@@ -90,9 +97,9 @@ export default function AdminOrdersPage() {
         setServices(Array.isArray(json) ? json : json.data || []);
       }
     } catch { /* ignore */ }
-  };
+  }, [API]);
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/customers`, {
@@ -103,7 +110,13 @@ export default function AdminOrdersPage() {
         setCustomers(Array.isArray(json) ? json : json.data || []);
       }
     } catch { /* ignore */ }
-  };
+  }, [API]);
+
+  useEffect(() => {
+    fetchOrders();
+    fetchServices();
+    fetchCustomers();
+  }, [fetchOrders, fetchServices, fetchCustomers]);
 
   const addOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,6 +262,7 @@ export default function AdminOrdersPage() {
     })
   ];
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: filtered,
     columns,

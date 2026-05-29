@@ -102,7 +102,7 @@ async function main() {
         { key: "address", value: "Shop No. 504, Bagrota, Ajmer Road, Jaipur, Rajasthan" },
         { key: "hours", value: "Open All Week: 10:00 AM – 8:00 PM" },
         { key: "whatsapp", value: "+919663574728" },
-        { key: "min_free_delivery", value: "499" },
+        { key: "min_free_delivery", value: "4999" },
         { key: "pickup_charge", value: "100" },
     ];
     for (const s of settingsData) {

@@ -14,11 +14,11 @@ const trustItems = [
   },
   {
     icon: <i className="fa-solid fa-truck-fast text-blue-500" />,
-    title: "Free Pickup & Drop on Orders Above ₹10,000",
+    title: "Free Pickup & Drop on Orders Above ₹4,999",
   },
   {
     icon: <i className="fa-solid fa-wallet text-purple-500" />,
-    title: "₹100 Pickup Charge for Orders up to ₹10,000",
+    title: "₹100 Pickup Charge for Orders up to ₹4,999",
   },
   {
     icon: <i className="fa-solid fa-headset text-orange-500" />,

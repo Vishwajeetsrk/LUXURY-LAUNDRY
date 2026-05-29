@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
 import { assignableRoles, ROLE_LABELS } from "@/lib/permissions";
 
@@ -11,6 +11,7 @@ interface Customer {
   phone?: string;
   role: string;
   createdAt: string;
+  walletBalance?: number;
   _count?: { orders: number };
 }
 
@@ -26,14 +27,12 @@ export default function AdminCustomersPage() {
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Customer>>({});
+  const [adjustWalletId, setAdjustWalletId] = useState<string | null>(null);
+  const [walletForm, setWalletForm] = useState({ amount: 0, type: "CREDIT", description: "" });
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
-
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/customers`, {
@@ -48,7 +47,11 @@ export default function AdminCustomersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [API]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   const startEdit = (c: Customer) => {
     if (!canWrite) return;
@@ -79,6 +82,30 @@ export default function AdminCustomersPage() {
       }
     } catch {
       alert("Error updating customer");
+    }
+  };
+
+  const adjustWallet = async () => {
+    if (!adjustWalletId || !walletForm.amount || !walletForm.description) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API}/api/wallet/admin/adjust`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: adjustWalletId, ...walletForm }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setCustomers((prev) =>
+          prev.map((c) => (c.id === adjustWalletId ? { ...c, walletBalance: updated.walletBalance } : c))
+        );
+        setAdjustWalletId(null);
+        setWalletForm({ amount: 0, type: "CREDIT", description: "" });
+      } else {
+        alert("Failed to adjust wallet");
+      }
+    } catch {
+      alert("Error adjusting wallet");
     }
   };
 
@@ -134,6 +161,7 @@ export default function AdminCustomersPage() {
                 <th>Phone</th>
                 <th>Role</th>
                 <th>Orders</th>
+                <th>Wallet</th>
                 <th>Joined</th>
                 <th className="text-right">Actions</th>
               </tr>
@@ -142,7 +170,7 @@ export default function AdminCustomersPage() {
               {loading ? (
                 [...Array(5)].map((_, i) => (
                   <tr key={i}>
-                    {[...Array(7)].map((_, j) => (
+                    {[...Array(8)].map((_, j) => (
                       <td key={j}>
                         <div className="h-4 w-20 skeleton rounded" />
                       </td>
@@ -232,6 +260,30 @@ export default function AdminCustomersPage() {
                           </div>
                         </div>
                       </td>
+                    ) : adjustWalletId === c.id ? (
+                      <td colSpan={8}>
+                        <div className="p-4 grid grid-cols-1 sm:grid-cols-4 gap-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <label className="form-label text-xs">Amount (₹)</label>
+                            <input type="number" value={walletForm.amount || 0} onChange={(e) => setWalletForm({ ...walletForm, amount: Number(e.target.value) })} className="form-input text-sm" />
+                          </div>
+                          <div>
+                            <label className="form-label text-xs">Type</label>
+                            <select value={walletForm.type} onChange={(e) => setWalletForm({ ...walletForm, type: e.target.value })} className="form-input text-sm">
+                              <option value="CREDIT">Add (Credit)</option>
+                              <option value="DEBIT">Deduct (Debit)</option>
+                            </select>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <label className="form-label text-xs">Description (Reason)</label>
+                            <input type="text" value={walletForm.description} onChange={(e) => setWalletForm({ ...walletForm, description: e.target.value })} className="form-input text-sm" placeholder="e.g. Bought Gold Package" />
+                          </div>
+                          <div className="sm:col-span-4 flex justify-end gap-2 mt-2">
+                            <button onClick={() => setAdjustWalletId(null)} className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-200 rounded-lg">Cancel</button>
+                            <button onClick={adjustWallet} className="px-3 py-1.5 text-sm bg-primary-500 text-white font-semibold rounded-lg hover:bg-primary-600">Apply to Wallet</button>
+                          </div>
+                        </div>
+                      </td>
                     ) : (
                       <>
                         <td>
@@ -262,12 +314,20 @@ export default function AdminCustomersPage() {
                           </span>
                         </td>
                         <td>{c._count?.orders ?? 0}</td>
+                        <td className="font-semibold text-green-600">₹{c.walletBalance ?? 0}</td>
                         <td className="text-xs text-gray-500">
                           {new Date(c.createdAt).toLocaleDateString()}
                         </td>
                         <td className="text-right">
                           {canWrite && (
                             <div className="flex items-center justify-end gap-1">
+                              <button
+                                onClick={() => setAdjustWalletId(c.id)}
+                                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
+                                title="Adjust Wallet"
+                              >
+                                <i className="fa-solid fa-wallet text-sm" />
+                              </button>
                               <button
                                 onClick={() => startEdit(c)}
                                 className="p-2 text-gray-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors duration-200"

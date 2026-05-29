@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "Is there a minimum order requirement?",
-    a: "There is no minimum order. However, orders above ₹10,000 qualify for FREE pickup & delivery. For orders up to ₹10,000, a ₹100 pickup charge applies.",
+    a: "There is no minimum order. However, orders above ₹4,999 qualify for FREE pickup & delivery. For orders up to ₹4,999, a ₹100 pickup charge applies.",
   },
   {
     q: "How long does it take to get my clothes back?",

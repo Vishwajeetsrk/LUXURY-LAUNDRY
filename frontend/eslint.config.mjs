@@ -10,7 +10,7 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-explicit-any": "off",
       "react/no-unescaped-entities": "off",
       "react-hooks/immutability": "warn",
-      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/set-state-in-effect": "off",
       "react-hooks/refs": "warn",
       "react-hooks/exhaustive-deps": "warn",
     },

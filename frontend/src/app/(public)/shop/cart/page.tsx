@@ -2,23 +2,24 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../../../context/CartContext";
 
 export default function CartPage() {
   const { cart, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
-  const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("CASH");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [user, setUser] = useState<any>(null);
   const [addresses, setAddresses] = useState<any[]>([]);
   const [selectedAddressIdx, setSelectedAddressIdx] = useState<number>(-1);
   const [showNewAddress, setShowNewAddress] = useState(false);
   const [newAddress, setNewAddress] = useState({ building: "", street: "", area: "", pincode: "", mapLink: "" });
   const [whatsappLink, setWhatsappLink] = useState("");
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [useWallet, setUseWallet] = useState(true);
 
   const router = useRouter();
 
@@ -36,13 +37,21 @@ export default function CartPage() {
         });
         if (res.ok) {
           const data = await res.json();
-          setUser(data);
           if (data.addresses && Array.isArray(data.addresses)) {
             setAddresses(data.addresses);
             if (data.addresses.length > 0) setSelectedAddressIdx(0);
             else setShowNewAddress(true);
           } else {
             setShowNewAddress(true);
+          }
+          
+          // Fetch wallet balance
+          const walletRes = await fetch(`${API_URL}/api/wallet/me`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (walletRes.ok) {
+            const walletData = await walletRes.json();
+            setWalletBalance(walletData.walletBalance || 0);
           }
         } else {
           router.push("/login?redirect=/shop/cart");
@@ -97,7 +106,13 @@ export default function CartPage() {
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       
+      let deliveryChargeApplied = false;
+      const deliveryCharge = cartTotal < 4999 ? 100 : 0;
+
       for (const item of cart) {
+        const currentDeliveryCharge = !deliveryChargeApplied ? deliveryCharge : 0;
+        deliveryChargeApplied = true;
+
         const res = await fetch(`${API_URL}/api/orders`, {
           method: "POST",
           headers: {
@@ -111,6 +126,8 @@ export default function CartPage() {
             paymentMethod,
             deliveryInstructions: notes,
             notes: "Ordered via Checkout",
+            deliveryCharge: currentDeliveryCharge,
+            useWallet: useWallet
           }),
         });
 
@@ -250,14 +267,41 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-gray-500">
                     <span>Pickup & Delivery</span>
-                    <span className="text-green-500">Free</span>
+                    {cartTotal >= 4999 ? (
+                      <span className="text-green-500">Free</span>
+                    ) : (
+                      <span>₹100</span>
+                    )}
                   </div>
+                  {walletBalance > 0 && (
+                    <div className="flex justify-between items-center py-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          checked={useWallet} 
+                          onChange={(e) => setUseWallet(e.target.checked)} 
+                          className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">Use Wallet Balance (₹{walletBalance.toLocaleString('en-IN')})</span>
+                      </label>
+                      {useWallet && (
+                        <span className="text-green-500 text-sm font-bold">
+                          -₹{Math.min(walletBalance, cartTotal + (cartTotal >= 4999 ? 0 : 100)).toLocaleString('en-IN')}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex justify-between text-xl font-black text-gray-900 mb-8">
-                  <span>Total</span>
-                  <span>₹{cartTotal}</span>
+                  <span>Estimated Total</span>
+                  <span>₹{Math.max(0, (cartTotal >= 4999 ? cartTotal : cartTotal + 100) - (useWallet ? walletBalance : 0)).toLocaleString('en-IN')}</span>
                 </div>
+                
+                <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded-lg mb-6 font-medium border border-blue-100">
+                  <i className="fa-solid fa-info-circle mr-1"></i>
+                  Any active package discounts (up to 20%) will be applied automatically on your final invoice.
+                </p>
 
                 <form onSubmit={handleCheckout} className="space-y-4">
                   {error && (
@@ -339,8 +383,8 @@ export default function CartPage() {
 
                   {paymentMethod === 'QR' && (
                     <div className="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-200">
-                      <p className="text-xs text-gray-500 mb-2 font-medium">Scan QR to pay ₹{cartTotal}</p>
-                      <img src="/images/qr.jpeg" alt="UPI QR Code" className="w-32 h-32 object-cover rounded-lg shadow-sm mb-2" />
+                      <p className="text-xs text-gray-500 mb-2 font-medium">Scan QR to pay ₹{cartTotal >= 4999 ? cartTotal : cartTotal + 100}</p>
+                      <Image src="/images/qr.jpeg" alt="UPI QR Code" width={128} height={128} className="w-32 h-32 object-cover rounded-lg shadow-sm mb-2" />
                       <p className="text-[10px] text-gray-400">Payment will be verified upon delivery.</p>
                     </div>
                   )}

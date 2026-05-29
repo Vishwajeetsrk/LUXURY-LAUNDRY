@@ -31,7 +31,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (saved) {
       try {
         setCart(JSON.parse(saved));
-      } catch (e) {
+      } catch {
         console.error("Failed to load cart");
       }
     }

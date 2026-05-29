@@ -19,11 +19,13 @@ model User {
   addresses          Json?      @default("[]")
   subscriptionPlan   String?
   discountPercentage Float      @default(0)
+  walletBalance      Float      @default(0)
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   deletedAt          DateTime?
 
-  subscriptionReqs SubscriptionRequest[]
+  subscriptionReqs   SubscriptionRequest[]
+  walletTransactions WalletTransaction[]
 
   @@index([email])
   @@index([role])
@@ -59,6 +61,8 @@ model Order {
   deliveryInstructions String?
   paymentMethod       String   @default("CASH")
   notes               String?
+  deliveryOTP         String?
+  walletAmountUsed    Float    @default(0)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   deletedAt           DateTime?
@@ -212,4 +216,50 @@ model AuditLog {
   @@index([userId])
   @@index([entity])
   @@index([createdAt])
+}
+
+model WalletTransaction {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  amount      Float
+  type        String   // CREDIT or DEBIT
+  description String
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Package {
+  id                 String   @id @default(cuid())
+  name               String
+  description        String?
+  price              Float
+  walletCredits      Float
+  discountPercentage Float
+  features           Json?    @default("[]")
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model Offer {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  description     String?
+  discountType    String   @default("PERCENTAGE") // PERCENTAGE or FLAT
+  discountValue   Float
+  minOrderValue   Float    @default(0)
+  maxDiscount     Float?
+  isActive        Boolean  @default(true)
+  usageLimit      Int?
+  usageCount      Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([code])
 }

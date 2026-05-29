@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-function useCountUp(end: number, duration: number = 2000, suffix: string = "") {
+function useCountUp(end: number, duration: number = 2000) {
   const [count, setCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -34,13 +34,13 @@ function useCountUp(end: number, duration: number = 2000, suffix: string = "") {
     requestAnimationFrame(animate);
   }, [hasStarted, end, duration]);
 
-  return { count, ref };
+  return { count, targetRef: ref };
 }
 
 export default function StatsSectionComponent() {
-  const orders = useCountUp(12000, 2000);
-  const satisfaction = useCountUp(98, 1500);
-  const services = useCountUp(5, 1000);
+  const { count: ordersCount, targetRef: ordersRef } = useCountUp(12000, 2000);
+  const { count: satisfactionCount, targetRef: satisfactionRef } = useCountUp(98, 1500);
+  const { count: servicesCount, targetRef: servicesRef } = useCountUp(5, 1000);
 
   return (
     <section className="py-16 lg:py-20 bg-white">
@@ -67,11 +67,11 @@ export default function StatsSectionComponent() {
           {/* Right: Stats Grid */}
           <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Orders */}
-            <div ref={orders.ref} className="bg-primary-500 rounded-2xl p-8 text-white">
+            <div ref={ordersRef} className="bg-primary-500 rounded-2xl p-8 text-white">
               <div className="text-5xl font-black mb-2">
-                {orders.count > 999
-                  ? `${(orders.count / 1000).toFixed(1)}k`
-                  : orders.count}
+                {ordersCount > 999
+                  ? `${(ordersCount / 1000).toFixed(1)}k`
+                  : ordersCount}
               </div>
               <div className="font-bold text-lg mb-1">Orders Completed</div>
               <p className="text-primary-100 text-sm">
@@ -81,9 +81,9 @@ export default function StatsSectionComponent() {
             </div>
 
             {/* Satisfaction */}
-            <div ref={satisfaction.ref} className="bg-gray-900 rounded-2xl p-8 text-white">
+            <div ref={satisfactionRef} className="bg-gray-900 rounded-2xl p-8 text-white">
               <div className="text-5xl font-black mb-2">
-                {satisfaction.count}%
+                {satisfactionCount}%
               </div>
               <div className="font-bold text-lg mb-1">Customer Satisfaction</div>
               <p className="text-gray-400 text-sm">
@@ -92,9 +92,9 @@ export default function StatsSectionComponent() {
             </div>
 
             {/* Services — full width */}
-            <div ref={services.ref} className="sm:col-span-2 bg-blue-50 rounded-2xl p-8">
+            <div ref={servicesRef} className="sm:col-span-2 bg-blue-50 rounded-2xl p-8">
               <div className="text-5xl font-black text-gray-900 mb-2">
-                {services.count}+
+                {servicesCount}+
               </div>
               <div className="font-bold text-gray-800 text-lg mb-1">
                 Premium Services

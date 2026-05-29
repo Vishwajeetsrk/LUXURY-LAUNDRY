@@ -8,7 +8,7 @@ export interface AuthRequest extends Request {
         name: string;
     };
 }
-export declare function authenticate(req: AuthRequest, res: Response, next: NextFunction): void;
+export declare function authenticate(req: AuthRequest, res: Response, next: NextFunction): Promise<void>;
 /** Staff panel access (SUPER_ADMIN, ADMIN, STAFF, DELIVERY) */
 export declare function panelAccess(req: AuthRequest, res: Response, next: NextFunction): void;
 /** Full admin only — backward compatible */

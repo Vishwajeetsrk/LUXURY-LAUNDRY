@@ -49,7 +49,7 @@ router.get("/", authenticate, async (req: AuthRequest, res: Response): Promise<v
 // POST /api/orders — create a new order
 router.post("/", authenticate, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { serviceId, quantity, address, notes, pickupDate, customerId, paymentMethod, deliveryInstructions } = req.body;
+    const { serviceId, quantity, address, notes, pickupDate, customerId, paymentMethod, deliveryInstructions, deliveryCharge, useWallet } = req.body;
     if (!serviceId || !quantity || !address) {
       res.status(400).json({ message: "serviceId, quantity, and address are required" });
       return;
@@ -81,7 +81,7 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response): Promise<
         service: { select: { name: true, unit: true } },
       },
     });
-    const invoice = await createInvoiceFromOrder(order.id, { paymentMethod: "CASH", paymentStatus: "UNPAID" });
+    const invoice = await createInvoiceFromOrder(order.id, { paymentMethod: paymentMethod || "CASH", paymentStatus: "UNPAID", deliveryCharge: Number(deliveryCharge) || 0, useWallet: !!useWallet });
     const adminPhone = process.env.ADMIN_WHATSAPP_PHONE || "+919663574728";
     const orderSummary = {
       id: order.id.slice(0, 8).toUpperCase(),
@@ -144,7 +144,7 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response): Promise<
 router.patch("/:id", authenticate, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const order = await prisma.order.findUnique({ where: { id } });
+    const order = await prisma.order.findUnique({ where: { id }, include: { customer: { select: { phone: true, name: true } } } });
     if (!order) {
       res.status(404).json({ message: "Order not found" });
       return;
@@ -179,6 +179,28 @@ router.patch("/:id", authenticate, async (req: AuthRequest, res: Response): Prom
         return;
       }
     }
+
+    // OTP LOGIC (Deactivated per user request for now)
+    /*
+    if (status === "OUT_FOR_DELIVERY" && order.status !== "OUT_FOR_DELIVERY") {
+      const otp = Math.floor(1000 + Math.random() * 9000).toString();
+      data.deliveryOTP = otp;
+      
+      // Send OTP to customer via WhatsApp
+      if (order.customer.phone) {
+        const msg = `Hello ${order.customer.name},\nYour LuxWash order #${id.slice(0,8).toUpperCase()} is OUT FOR DELIVERY! 🚚\n\nPlease share this OTP with our delivery executive: *${otp}*`;
+        await sendWhatsAppIfConfigured(order.customer.phone, msg);
+      }
+    }
+
+    if (status === "DELIVERED" && order.status !== "DELIVERED" && order.deliveryOTP) {
+      if (!req.body.otp || req.body.otp.toString() !== order.deliveryOTP) {
+        res.status(400).json({ message: "Invalid or missing delivery OTP" });
+        return;
+      }
+      data.deliveryOTP = null; // Clear OTP after successful delivery
+    }
+    */
 
     const updated = await prisma.order.update({
       where: { id },

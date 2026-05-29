@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import prisma from "../lib/prisma";
 import { hasPermission, isPanelRole, type Permission } from "../lib/permissions";
 
 const JWT_SECRET = process.env.JWT_SECRET || "luxwash-secret-key-2024";
@@ -8,7 +9,7 @@ export interface AuthRequest extends Request {
   user?: { id: string; email: string; role: string; name: string };
 }
 
-export function authenticate(req: AuthRequest, res: Response, next: NextFunction): void {
+export async function authenticate(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   let token = req.cookies?.token;
   const header = req.headers.authorization;
   if (header && header.startsWith("Bearer ")) {
@@ -20,8 +21,23 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
     return;
   }
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string; name: string };
-    req.user = decoded;
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: { id: true, email: true, role: true, name: true, deletedAt: true },
+    });
+
+    if (!user || user.deletedAt) {
+      res.status(401).json({ message: "Invalid or expired token" });
+      return;
+    }
+
+    req.user = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    };
     next();
   } catch {
     res.status(401).json({ message: "Invalid or expired token" });

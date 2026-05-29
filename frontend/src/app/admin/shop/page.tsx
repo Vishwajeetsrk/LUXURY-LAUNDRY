@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ShopProduct {
   id: string;
@@ -65,11 +65,7 @@ export default function AdminShopPage() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/shop-products?all=true`, {
@@ -84,7 +80,11 @@ export default function AdminShopPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [API]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const startEdit = (p: ShopProduct) => {
     setEditingId(p.id);
@@ -643,6 +643,7 @@ export default function AdminShopPage() {
                             <div className="flex items-center gap-3">
                               {product.image && (
                                 <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
                                   <img
                                     src={product.image}
                                     alt={product.name}

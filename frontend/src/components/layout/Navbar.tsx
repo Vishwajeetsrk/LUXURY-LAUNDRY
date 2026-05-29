@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { useCart } from "../../context/CartContext";
+import { isPanelRole } from "@/lib/auth";
+import { buildApiUrl } from "@/lib/api";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -18,6 +21,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
   const { cartCount } = useCart();
 
   useEffect(() => {
@@ -41,18 +45,35 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const [user, setUser] = useState<{ name: string } | null>(null);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (token && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Failed to parse user");
+    const syncUser = () => {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      if (token && storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
       }
-    }
+    };
+    syncUser();
+    window.addEventListener("storage", syncUser);
+    return () => window.removeEventListener("storage", syncUser);
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch(buildApiUrl("/api/auth/logout"), { method: "POST", credentials: "include" });
+    } catch {
+      // ignore
+    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
 
   return (
     <>
@@ -68,12 +89,7 @@ export default function Navbar() {
               {/* Logo */}
               <Link href="/" className="flex items-center flex-shrink-0">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                    <i className="fa-solid fa-shirt text-white text-sm" />
-                  </div>
-                  <span className="text-lg font-black tracking-tight text-gray-900">
-                    LUXURY <span className="text-primary-500">LAUNDRY</span>
-                  </span>
+                  <Image src="/logo.png" alt="Jaipur Laundryy" width={140} height={40} className="object-contain" />
                 </div>
               </Link>
 
@@ -134,6 +150,11 @@ export default function Navbar() {
                     {/* Dropdown Menu */}
                     <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
                       <div className="py-2">
+                        {isPanelRole(user.role) && (
+                          <Link href="/admin" className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-600">
+                            <i className="fa-solid fa-shield-halved w-5 text-center mr-2"></i> Admin Panel
+                          </Link>
+                        )}
                         <Link href="/dashboard" className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-600">
                           <i className="fa-solid fa-chart-pie w-5 text-center mr-2"></i> Dashboard
                         </Link>
@@ -142,11 +163,7 @@ export default function Navbar() {
                         </Link>
                         <div className="border-t border-gray-100 my-1"></div>
                         <button
-                          onClick={() => {
-                            localStorage.removeItem("token");
-                            localStorage.removeItem("user");
-                            window.location.href = "/login";
-                          }}
+                          onClick={handleLogout}
                           className="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50"
                         >
                           <i className="fa-solid fa-arrow-right-from-bracket w-5 text-center mr-2"></i> Logout
@@ -181,12 +198,7 @@ export default function Navbar() {
             <div className="flex items-center justify-between h-14">
               {/* Logo */}
               <Link href="/" className="flex items-center gap-2">
-                <div className="w-7 h-7 bg-primary-500 rounded-full flex items-center justify-center">
-                  <i className="fa-solid fa-shirt text-white text-xs" />
-                </div>
-                <span className="text-base font-black tracking-tight text-gray-900">
-                  LUXURY <span className="text-primary-500">LAUNDRY</span>
-                </span>
+                <Image src="/logo.png" alt="Jaipur Laundryy" width={120} height={32} className="object-contain" />
               </Link>
 
               <div className="flex items-center gap-2">
@@ -247,12 +259,7 @@ export default function Navbar() {
         {/* Drawer Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-primary-500 rounded-full flex items-center justify-center">
-              <i className="fa-solid fa-shirt text-white text-xs" />
-            </div>
-            <span className="text-base font-black text-gray-900">
-              LUXURY <span className="text-primary-500">LAUNDRY</span>
-            </span>
+            <Image src="/logo.png" alt="Jaipur Laundryy" width={120} height={32} className="object-contain" />
           </div>
           <button
             onClick={() => setMobileOpen(false)}
@@ -321,6 +328,14 @@ export default function Navbar() {
           <div className="flex flex-col gap-2">
             {user ? (
               <>
+                {isPanelRole(user.role) && (
+                  <Link
+                    href="/admin"
+                    className="w-full py-2.5 text-center text-sm font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors duration-200"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
                 <Link
                   href="/dashboard"
                   className="w-full py-2.5 text-center text-sm font-medium text-primary-600 border border-primary-200 rounded-md hover:bg-primary-50 transition-colors duration-200"
@@ -328,11 +343,7 @@ export default function Navbar() {
                   Dashboard
                 </Link>
                 <button
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                    window.location.href = "/login";
-                  }}
+                  onClick={handleLogout}
                   className="w-full py-2.5 text-center text-sm font-medium text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition-colors duration-200"
                 >
                   Logout ({user.name?.split(" ")[0]})

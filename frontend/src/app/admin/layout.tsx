@@ -10,6 +10,7 @@ import {
   isPanelRole,
   type Permission,
 } from "@/lib/permissions";
+import { buildApiUrl } from "@/lib/api";
 
 const sidebarLinks: { href: string; label: string; icon: string; permission: Permission }[] = [
   { href: "/admin", label: "Dashboard", icon: "fa-solid fa-chart-line", permission: "dashboard:read" },
@@ -18,6 +19,8 @@ const sidebarLinks: { href: string; label: string; icon: string; permission: Per
   { href: "/admin/subscriptions", label: "Subscriptions", icon: "fa-solid fa-crown", permission: "subscriptions:read" },
   { href: "/admin/customers", label: "Customers", icon: "fa-solid fa-users", permission: "customers:read" },
   { href: "/admin/services", label: "Services", icon: "fa-solid fa-concierge-bell", permission: "services:read" },
+  { href: "/admin/packages", label: "Packages", icon: "fa-solid fa-box-open", permission: "packages:read" },
+  { href: "/admin/offers", label: "Offers", icon: "fa-solid fa-tags", permission: "packages:read" },
   { href: "/admin/shop", label: "Shop Products", icon: "fa-solid fa-cart-shopping", permission: "shop:read" },
   { href: "/admin/whatsapp", label: "WhatsApp Logs", icon: "fa-brands fa-whatsapp", permission: "whatsapp:read" },
   { href: "/admin/content", label: "Content", icon: "fa-solid fa-pen-to-square", permission: "content:write" },
@@ -37,27 +40,68 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (isPanelRole(parsed.role)) {
-        setUser(parsed);
-        if (!canAccessAdminPath(parsed.role, pathname)) {
-          const fallback = sidebarLinks.find((l) => hasPermission(parsed.role, l.permission));
+    let cancelled = false;
+
+    const verifyPanelUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        localStorage.removeItem("user");
+        router.replace("/login");
+        return;
+      }
+
+      try {
+        const res = await fetch(buildApiUrl("/api/auth/me"), {
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
+        });
+
+        if (!res.ok) throw new Error("Unable to verify user");
+
+        const currentUser = await res.json();
+        if (!isPanelRole(currentUser.role)) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          router.replace("/login");
+          return;
+        }
+
+        const panelUser = {
+          name: currentUser.name,
+          email: currentUser.email,
+          role: currentUser.role,
+        };
+        localStorage.setItem("user", JSON.stringify(panelUser));
+
+        if (cancelled) return;
+        setUser(panelUser);
+
+        if (!canAccessAdminPath(panelUser.role, pathname)) {
+          const fallback = sidebarLinks.find((l) => hasPermission(panelUser.role, l.permission));
           router.replace(fallback?.href || "/login");
         }
-      } else {
-        router.push("/login");
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        router.replace("/login");
       }
-    } else {
-      router.push("/login");
-    }
+    };
+
+    verifyPanelUser();
+    return () => {
+      cancelled = true;
+    };
   }, [pathname, router]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch(buildApiUrl("/api/auth/logout"), { method: "POST", credentials: "include" });
+    } catch {
+      // ignore
+    }
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    router.push("/login");
+    router.replace("/login");
   };
 
   if (!user) {

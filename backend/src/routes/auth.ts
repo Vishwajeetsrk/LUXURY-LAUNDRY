@@ -31,9 +31,35 @@ router.post("/register", validate(registerSchema), async (req: AuthRequest, res:
       return;
     }
     const hashed = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: { name, email, password: hashed, phone: phone || null, role: "CUSTOMER" },
+    
+    // Check for welcome bonus
+    const welcomeBonusSetting = await prisma.siteSettings.findUnique({
+      where: { key: "welcome_bonus_credits" }
     });
+    const welcomeBonus = welcomeBonusSetting && !isNaN(Number(welcomeBonusSetting.value)) ? Number(welcomeBonusSetting.value) : 0;
+
+    let user;
+    if (welcomeBonus > 0) {
+      user = await prisma.$transaction(async (tx) => {
+        const newUser = await tx.user.create({
+          data: { name, email, password: hashed, phone: phone || null, role: "CUSTOMER", walletBalance: welcomeBonus },
+        });
+        await tx.walletTransaction.create({
+          data: {
+            userId: newUser.id,
+            amount: welcomeBonus,
+            type: "CREDIT",
+            description: "Welcome Bonus"
+          }
+        });
+        return newUser;
+      });
+    } else {
+      user = await prisma.user.create({
+        data: { name, email, password: hashed, phone: phone || null, role: "CUSTOMER" },
+      });
+    }
+
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name }, JWT_SECRET, { expiresIn: "7d" });
     
     res.cookie("token", token, {
@@ -81,6 +107,16 @@ router.post("/login", validate(loginSchema), async (req: AuthRequest, res: Respo
 });
 
 // GET /api/auth/logout
+router.get("/logout", (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.json({ message: "Logged out successfully" });
+});
+
+// POST /api/auth/logout (alias for convenience)
 router.post("/logout", (req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,

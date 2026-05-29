@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ContentItem {
   key: string;
@@ -30,11 +30,7 @@ export default function AdminContentPage() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => {
-    fetchContent();
-  }, []);
-
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/content`, {
@@ -45,7 +41,11 @@ export default function AdminContentPage() {
         if (data.length > 0) setContent(data);
       }
     } catch { /* use defaults */ }
-  };
+  }, [API]);
+
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent]);
 
   const startEdit = (item: ContentItem) => {
     setEditingKey(item.key);

@@ -19,6 +19,10 @@ import invoiceRoutes from "./routes/invoices";
 import whatsappRoutes from "./routes/whatsapp";
 import subscriptionRoutes from "./routes/subscriptions";
 import shopProductRoutes from "./routes/shopProducts";
+import packageRoutes from "./routes/packages";
+import walletRoutes from "./routes/wallet";
+import offerRoutes from "./routes/offers";
+import settingRoutes from "./routes/settings";
 import logger from "./lib/logger";
 
 const app = express();
@@ -64,6 +68,10 @@ app.use("/api/invoices", invoiceRoutes);
 app.use("/api/whatsapp", whatsappRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/shop-products", shopProductRoutes);
+app.use("/api/packages", packageRoutes);
+app.use("/api/wallet", walletRoutes);
+app.use("/api/offers", offerRoutes);
+app.use("/api/settings", settingRoutes);
 
 // 404
 app.use((req, res) => {

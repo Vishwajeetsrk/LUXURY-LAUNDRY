@@ -56,6 +56,7 @@ export async function createInvoiceFromOrder(
     paymentStatus?: string;
     notes?: string;
     dueDate?: Date;
+    useWallet?: boolean;
   },
 ) {
   return prisma.$transaction(async (tx) => {
@@ -68,7 +69,7 @@ export async function createInvoiceFromOrder(
     const order = await tx.order.findUnique({
       where: { id: orderId },
       include: {
-        customer: { select: { id: true, discountPercentage: true } },
+        customer: { select: { id: true, discountPercentage: true, walletBalance: true } },
         service: { select: { name: true, unit: true, pricePerUnit: true } },
       },
     });
@@ -93,7 +94,43 @@ export async function createInvoiceFromOrder(
       discountAmount: discountAmount,
       gstRate: 18,
     });
-    const paymentStatus = input.paymentStatus ?? "UNPAID";
+    let paymentStatus = input.paymentStatus ?? "UNPAID";
+    let paymentMethod = input.paymentMethod ?? "CASH";
+    let walletDeducted = 0;
+
+    if (input.useWallet && order.customer.walletBalance > 0) {
+      // Calculate max automatic discount (20% cap)
+      const maxDiscount = totals.totalAmount * 0.20;
+      let finalTotal = totals.totalAmount;
+
+      if (order.customer.walletBalance >= finalTotal) {
+        walletDeducted = finalTotal;
+        paymentStatus = "PAID";
+        paymentMethod = "WALLET";
+      } else {
+        walletDeducted = order.customer.walletBalance;
+        paymentStatus = "PARTIAL";
+      }
+
+      await tx.user.update({
+        where: { id: order.customerId },
+        data: { walletBalance: { decrement: walletDeducted } }
+      });
+
+      await tx.walletTransaction.create({
+        data: {
+          userId: order.customerId,
+          amount: walletDeducted,
+          type: "DEBIT",
+          description: `Paid for Order #${orderId.slice(0, 8).toUpperCase()}`
+        }
+      });
+
+      await tx.order.update({
+        where: { id: orderId },
+        data: { walletAmountUsed: walletDeducted }
+      });
+    }
 
     return tx.invoice.create({
       data: {
@@ -109,7 +146,7 @@ export async function createInvoiceFromOrder(
         discountAmount: discountAmount,
         deliveryCharge: input.deliveryCharge ?? 0,
         totalAmount: totals.totalAmount,
-        paymentMethod: input.paymentMethod ?? "CASH",
+        paymentMethod,
         paymentStatus,
         invoiceStatus: paymentStatus === "PAID" ? "PAID" : "SENT",
         paidAt: paymentStatus === "PAID" ? new Date() : null,
@@ -139,7 +176,7 @@ export async function createManualInvoice(input: {
 
     const totalItemsPrice = input.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
     const discountAmount = input.discountAmount ?? (customer.discountPercentage > 0
-      ? totalItemsPrice * (customer.discountPercentage / 100)
+      ? Math.min(totalItemsPrice * (customer.discountPercentage / 100), totalItemsPrice * 0.20) // Cap automatic discount at 20%
       : 0);
 
     const totals = calculateInvoiceTotals({

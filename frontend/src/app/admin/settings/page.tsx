@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Setting {
   key: string;
@@ -14,8 +14,9 @@ const settingFields = [
   { key: "address", label: "Address", icon: "fa-solid fa-location-dot", placeholder: "Shop No. 504, Bagrota, Ajmer Road, Jaipur" },
   { key: "hours", label: "Business Hours", icon: "fa-solid fa-clock", placeholder: "Open All Week: 10:00 AM – 8:00 PM" },
   { key: "whatsapp", label: "WhatsApp Number", icon: "fa-brands fa-whatsapp", placeholder: "+919663574728" },
-  { key: "min_free_delivery", label: "Min Order for Free Delivery (₹)", icon: "fa-solid fa-truck", placeholder: "499" },
+  { key: "min_free_delivery", label: "Min Order for Free Delivery (₹)", icon: "fa-solid fa-truck", placeholder: "4999" },
   { key: "pickup_charge", label: "Pickup Charge (₹)", icon: "fa-solid fa-indian-rupee-sign", placeholder: "100" },
+  { key: "welcome_bonus_credits", label: "Welcome Bonus Wallet Credits (₹)", icon: "fa-solid fa-gift", placeholder: "100" },
 ];
 
 export default function AdminSettingsPage() {
@@ -25,9 +26,7 @@ export default function AdminSettingsPage() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => { fetchSettings(); }, []);
-
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/content/settings`, { headers: { Authorization: `Bearer ${token}` } });
@@ -38,7 +37,9 @@ export default function AdminSettingsPage() {
         setSettings(map);
       }
     } catch { /* ignore */ }
-  };
+  }, [API]);
+
+  useEffect(() => { fetchSettings(); }, [fetchSettings]);
 
   const handleSave = async () => {
     setSaving(true);

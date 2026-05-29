@@ -9,9 +9,10 @@ exports.adminOnly = adminOnly;
 exports.requirePermission = requirePermission;
 exports.requireRoles = requireRoles;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const prisma_1 = __importDefault(require("../lib/prisma"));
 const permissions_1 = require("../lib/permissions");
 const JWT_SECRET = process.env.JWT_SECRET || "luxwash-secret-key-2024";
-function authenticate(req, res, next) {
+async function authenticate(req, res, next) {
     let token = req.cookies?.token;
     const header = req.headers.authorization;
     if (header && header.startsWith("Bearer ")) {
@@ -23,7 +24,20 @@ function authenticate(req, res, next) {
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-        req.user = decoded;
+        const user = await prisma_1.default.user.findUnique({
+            where: { id: decoded.id },
+            select: { id: true, email: true, role: true, name: true, deletedAt: true },
+        });
+        if (!user || user.deletedAt) {
+            res.status(401).json({ message: "Invalid or expired token" });
+            return;
+        }
+        req.user = {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            name: user.name,
+        };
         next();
     }
     catch {

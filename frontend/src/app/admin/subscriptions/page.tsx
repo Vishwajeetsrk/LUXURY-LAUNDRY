@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function SubscriptionsAdminPage() {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -25,11 +25,11 @@ export default function SubscriptionsAdminPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [fetchRequests]);
 
   const handleUpdate = async (id: string, status: "APPROVED" | "REJECTED") => {
     try {

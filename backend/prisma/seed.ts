@@ -11,20 +11,22 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Seeding database...\n");
 
-  // 1. Create Admin User
-  const adminPassword = await bcrypt.hash("admin123", 10);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@luxwash.com" },
-    update: { password: adminPassword, role: "ADMIN" },
+  // 1. Create the owner account. Only this account starts as SUPER_ADMIN.
+  const ownerEmail = process.env.OWNER_ADMIN_EMAIL || process.env.ADMIN_EMAIL || "vishwajeetsrk@gmail.com";
+  const ownerPassword = process.env.OWNER_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "12345678";
+  const ownerPasswordHash = await bcrypt.hash(ownerPassword, 10);
+  const owner = await prisma.user.upsert({
+    where: { email: ownerEmail },
+    update: { password: ownerPasswordHash, role: "SUPER_ADMIN", name: "Vishwajeet" },
     create: {
-      name: "Admin",
-      email: "admin@luxwash.com",
-      password: adminPassword,
+      name: "Vishwajeet",
+      email: ownerEmail,
+      password: ownerPasswordHash,
       phone: "+919663574728",
-      role: "ADMIN",
+      role: "SUPER_ADMIN",
     },
   });
-  console.log("✅ Admin user created:", admin.email);
+  console.log("✅ Owner SUPER_ADMIN ready:", owner.email);
 
   // 2. Create Sample Customer
   const custPassword = await bcrypt.hash("customer123", 10);
@@ -41,6 +43,7 @@ async function main() {
   });
   console.log("✅ Sample customer created:", customer.email);
 
+  if (process.env.SEED_DEMO_PANEL_USERS === "true") {
   // 2b. Super Admin
   const superPassword = await bcrypt.hash("superadmin123", 10);
   const superAdmin = await prisma.user.upsert({
@@ -85,6 +88,8 @@ async function main() {
     },
   });
   console.log("✅ Delivery user created:", delivery.email);
+
+  }
 
   // 3. Create Services
   const servicesData = [
@@ -214,7 +219,7 @@ async function main() {
     { key: "address", value: "Shop No. 504, Bagrota, Ajmer Road, Jaipur, Rajasthan" },
     { key: "hours", value: "Open All Week: 10:00 AM – 8:00 PM" },
     { key: "whatsapp", value: "+919663574728" },
-    { key: "min_free_delivery", value: "10000" },
+    { key: "min_free_delivery", value: "4999" },
     { key: "pickup_charge", value: "100" },
   ];
 
@@ -240,10 +245,13 @@ async function main() {
 
   console.log("\n🎉 Database seeded successfully!\n");
   console.log("── Panel logins (role-based admin access) ──");
-  console.log("Super Admin: superadmin@luxwash.com / superadmin123");
-  console.log("Admin:       admin@luxwash.com / admin123");
-  console.log("Staff:       staff@luxwash.com / staff123");
-  console.log("Delivery:    delivery@luxwash.com / delivery123");
+  console.log(`Owner:       ${ownerEmail} / ${ownerPassword}`);
+  if (process.env.SEED_DEMO_PANEL_USERS === "true") {
+    console.log("Super Admin: superadmin@luxwash.com / superadmin123");
+    console.log("Admin:       admin@luxwash.com / admin123");
+    console.log("Staff:       staff@luxwash.com / staff123");
+    console.log("Delivery:    delivery@luxwash.com / delivery123");
+  }
   console.log("Customer:    rahul@example.com / customer123\n");
 }
 

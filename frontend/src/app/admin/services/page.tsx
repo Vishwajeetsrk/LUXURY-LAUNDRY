@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
 
 interface Service {
@@ -25,14 +25,14 @@ export default function AdminServicesPage() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => { fetchServices(); }, []);
-
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       const res = await fetch(`${API}/api/services`);
       if (res.ok) setServices(await res.json());
     } catch { /* ignore */ } finally { setLoading(false); }
-  };
+  }, [API]);
+
+  useEffect(() => { fetchServices(); }, [fetchServices]);
 
   const startEdit = (s: Service) => {
     setEditingId(s.id);

@@ -84,8 +84,7 @@ export default function ShopPage() {
   const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("popularity");
-  const [dbServices, setDbServices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [dbServices, setDbServices] = useState<any[]>(products);
 
   useEffect(() => {
     let cancelled = false;
@@ -146,9 +145,7 @@ export default function ShopPage() {
         if (!cancelled) setDbServices(mappedProducts);
       } catch (e) {
         console.error("Shop load error:", e);
-        if (!cancelled) setDbServices([]);
-      } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setDbServices(products);
       }
     };
 

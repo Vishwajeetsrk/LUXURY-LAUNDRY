@@ -20,7 +20,8 @@ A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) bui
 - **Order History (`/dashboard/orders`):** Track current order statuses (Pending, Processing, Delivered, etc.).
 - **Invoice Tracking (`/dashboard/invoices`):** View, download, and track payment status for past and current invoices.
 - **Shop & Cart (`/shop`):** Browse service packages, add items to cart, and checkout seamlessly.
-- **Subscriptions:** Request monthly/yearly laundry subscription plans.
+- **Subscriptions & Packages:** Request monthly/yearly laundry subscription plans or buy prepaid packages to get wallet credits.
+- **Wallet System & Welcome Bonus:** New users can receive an automated welcome bonus, and users can pay for orders via their wallet balance.
 
 ### 🛡️ Admin Dashboard (`/admin`)
 - **Overview Dashboard:** High-level statistics, revenue, recent orders, and quick actions.
@@ -35,7 +36,9 @@ A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) bui
 - **Content Management System (`/admin/content`):** Dynamically edit website text, banners, and descriptions without touching code.
 - **WhatsApp Integration (`/admin/whatsapp`):** View logs of automated WhatsApp messages (order updates, invoice links) sent to customers via UltraMsg.
 - **Inquiries (`/admin/contacts`):** View and respond to customer queries from the Contact Us form.
-- **Site Settings (`/admin/settings`):** Global configurations like company phone, email, and social links.
+- **Packages Management (`/admin/packages`):** Create and manage subscription packages with automated wallet credit logic and discounts.
+- **Offers & Promotions (`/admin/offers`):** Generate and manage custom discount codes, tracking usage limits and conditions.
+- **Site Settings & Welcome Bonus (`/admin/settings`):** Global configurations like company phone, email, social links, and auto-assignable Welcome Bonus wallet credits.
 
 ## 📁 Project Structure
 
@@ -151,7 +154,9 @@ npx prisma studio
 - **Invoice** & **InvoiceItem** — Advanced billing system with tax breakdowns (CGST/SGST)
 - **WhatsAppLog** — Tracking external WhatsApp communications
 - **AuditLog** — Tracking admin actions
-- **SubscriptionRequest** — Tracking user subscription plans
+- **SubscriptionRequest** & **Package** — Tracking user subscription plans and prepaid packages
+- **WalletTransaction** — Financial ledger tracking customer wallet balance operations
+- **Offer** — Promotional campaigns and discount rules engine
 
 ## 📞 Business Information
 

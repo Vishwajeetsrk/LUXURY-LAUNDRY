@@ -14,7 +14,7 @@ router.get("/", authenticate, requirePermission("customers:read"), async (req: A
 
     const [customers, total] = await Promise.all([
       prisma.user.findMany({
-        select: { id: true, name: true, email: true, phone: true, role: true, createdAt: true, _count: { select: { orders: true } } },
+        select: { id: true, name: true, email: true, phone: true, role: true, createdAt: true, walletBalance: true, _count: { select: { orders: true } } },
         orderBy: { createdAt: "desc" },
         skip,
         take: limit,

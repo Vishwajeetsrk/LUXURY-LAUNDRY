@@ -5,60 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-// Plan data
-const pricingPlans = [
-  {
-    name: "SILVER PACKAGE",
-    subtitle: "Value Pack",
-    price: "2,000",
-    unit: "",
-    description: "Ideal for regular clothes dry cleaning and washing",
-    features: [
-      "20% OFF all laundry & dry cleaning",
-      "Daily Wear (Shirt, T-Shirt, Trouser, Jeans)",
-      "Regular Laundry (Wash & Fold, Wash & Steam Iron)",
-      "Bed sheets & regular curtains",
-    ],
-    cta: "Select Silver",
-    popular: false,
-    color: "border-gray-200",
-    btnClass: "border-2 border-gray-400 text-gray-700 hover:bg-gray-100",
-  },
-  {
-    name: "GOLD PACKAGE",
-    subtitle: "Premium & Household",
-    price: "5,000",
-    unit: "",
-    description: "Best for regular clothes + winter wear & costly garments",
-    features: [
-      "25% OFF on premium items & extra benefits",
-      "Saree, Suits & Heavy Dresses",
-      "Woolens (Sweaters, Jackets, Sweatshirts)",
-      "Blankets & Quilts (Kambal & Razai)",
-    ],
-    cta: "Select Gold",
-    popular: true,
-    color: "border-yellow-400",
-    btnClass: "bg-yellow-500 text-white hover:bg-yellow-600 shadow-yellow-500/30 shadow-lg",
-  },
-  {
-    name: "PREMIUM PACKAGE",
-    subtitle: "Luxury & Delicate Care",
-    price: "10,000",
-    unit: "",
-    description: "For high-end customers (lehenga, leather, shoes, bags)",
-    features: [
-      "30% OFF on luxury items",
-      "Free Express Delivery (24 Hours)",
-      "Heavy Designer Wear (Lehenga, Achkan)",
-      "Leather Jackets & Pashmina Shawls",
-      "Premium Footwear & Luxury Handbags",
-    ],
-    cta: "Select Premium",
-    popular: false,
-    color: "border-purple-300",
-    btnClass: "border-2 border-purple-500 text-purple-600 hover:bg-purple-50",
-  },
+// Define our design classes for dynamic packages based on index
+const packageStyles = [
+  { color: "border-gray-200", btnClass: "border-2 border-gray-400 text-gray-700 hover:bg-gray-100" },
+  { color: "border-yellow-400", btnClass: "bg-yellow-500 text-white hover:bg-yellow-600 shadow-yellow-500/30 shadow-lg" },
+  { color: "border-purple-300", btnClass: "border-2 border-purple-500 text-purple-600 hover:bg-purple-50" },
 ];
 
 const additionalPricing = [
@@ -75,6 +26,26 @@ const additionalPricing = [
 export default function PricingPage() {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [packages, setPackages] = useState<any[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState(true);
+
+  useEffect(() => {
+    async function fetchPackages() {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${API_URL}/api/packages`);
+        if (res.ok) {
+          const data = await res.json();
+          setPackages(data.data.filter((p: any) => p.isActive) || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch packages", err);
+      } finally {
+        setLoadingPackages(false);
+      }
+    }
+    fetchPackages();
+  }, []);
 
   const handleSelectPlan = async (plan: any) => {
     const token = localStorage.getItem("token");
@@ -150,7 +121,7 @@ export default function PricingPage() {
           </h2>
           <p className="text-gray-600 text-base leading-relaxed">
             No hidden fees, no surprises. What you see is what you pay. Free
-            pickup & delivery on orders above ₹10,000.
+            pickup & delivery on orders above ₹4,999.
           </p>
         </div>
       </section>
@@ -159,63 +130,88 @@ export default function PricingPage() {
       <section className="pb-16 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {pricingPlans.map((plan, i) => (
-              <div
-                key={i}
-                className={`relative rounded-2xl border-2 ${plan.color} p-8 flex flex-col ${
-                  plan.popular ? "shadow-xl scale-105" : "shadow-sm"
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary-500 text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">
-                    Most Popular
-                  </div>
-                )}
-
-                {/* Plan name */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-black text-gray-900 mb-1">
-                    {plan.name}
-                  </h3>
-                  <p className="text-sm text-gray-500">{plan.subtitle}</p>
-                </div>
-
-                {/* Price */}
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-sm text-gray-500 font-medium">₹</span>
-                  <span className="text-5xl font-black text-gray-900">
-                    {plan.price}
-                  </span>
-                  <span className="text-sm text-gray-500">{plan.unit}</span>
-                </div>
-
-                <p className="text-sm text-gray-500 mb-6">{plan.description}</p>
-
-                {/* Features */}
-                <ul className="space-y-3 mb-8 flex-1">
-                  {plan.features.map((feat) => (
-                    <li
-                      key={feat}
-                      className="flex items-start gap-2.5 text-sm text-gray-700"
-                    >
-                      <i className="fa-solid fa-check text-primary-500 mt-0.5 flex-shrink-0" />
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <button
-                  onClick={() => handleSelectPlan(plan)}
-                  disabled={loadingPlan === plan.name}
-                  className={`w-full text-center py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${plan.btnClass} ${loadingPlan === plan.name ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  {loadingPlan === plan.name ? (
-                    <><i className="fa-solid fa-spinner fa-spin mr-2" /> Processing...</>
-                  ) : plan.cta}
-                </button>
+            {loadingPackages ? (
+              <div className="col-span-1 md:col-span-3 text-center py-12">
+                <i className="fa-solid fa-spinner fa-spin text-3xl text-primary-500"></i>
+                <p className="text-gray-500 mt-2">Loading Packages...</p>
               </div>
-            ))}
+            ) : packages.length === 0 ? (
+              <div className="col-span-1 md:col-span-3 text-center py-12 text-gray-500">
+                No active packages available at the moment.
+              </div>
+            ) : packages.map((plan, i) => {
+              const style = packageStyles[i % packageStyles.length];
+              const popular = i === 1; // Middle one popular by default
+              return (
+                <div
+                  key={plan.id}
+                  className={`relative rounded-2xl border-2 ${style.color} p-8 flex flex-col ${
+                    popular ? "shadow-xl scale-105 z-10 bg-white" : "shadow-sm bg-white"
+                  }`}
+                >
+                  {popular && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary-500 text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap shadow-md">
+                      Most Popular
+                    </div>
+                  )}
+
+                  {/* Plan name */}
+                  <div className="mb-6 text-center md:text-left">
+                    <h3 className="text-xl font-black text-gray-900 mb-1">
+                      {plan.name}
+                    </h3>
+                    <p className="text-sm font-semibold text-primary-600 bg-primary-50 inline-block px-3 py-1 rounded-full mt-2 border border-primary-100 shadow-sm">{plan.discountPercentage}% Auto-Discount</p>
+                  </div>
+
+                  {/* Price */}
+                  <div className="flex items-baseline gap-1 mb-2 justify-center md:justify-start">
+                    <span className="text-sm text-gray-500 font-medium">₹</span>
+                    <span className="text-5xl font-black text-gray-900">
+                      {plan.price.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+
+                  <p className="text-sm text-gray-500 mb-6 text-center md:text-left">{plan.description}</p>
+                  
+                  {/* Credits Highlight */}
+                  <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg p-3 mb-6 flex items-center gap-3 shadow-sm">
+                    <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                      <i className="fa-solid fa-wallet text-green-600"></i>
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold uppercase tracking-wider text-green-600">You Get</div>
+                      <div className="font-black text-lg">₹{plan.walletCredits.toLocaleString('en-IN')} Credits</div>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {plan.features.map((feat: string, idx: number) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-2.5 text-sm text-gray-700 font-medium"
+                      >
+                        <div className="bg-primary-50 p-1 rounded-full mt-0.5">
+                          <i className="fa-solid fa-check text-primary-600 text-[10px]" />
+                        </div>
+                        <span className="leading-snug">{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  <button
+                    onClick={() => handleSelectPlan(plan)}
+                    disabled={loadingPlan === plan.name}
+                    className={`w-full text-center py-3.5 rounded-xl font-bold text-sm transition-all duration-300 ${style.btnClass} ${loadingPlan === plan.name ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-1'}`}
+                  >
+                    {loadingPlan === plan.name ? (
+                      <><i className="fa-solid fa-spinner fa-spin mr-2" /> Processing...</>
+                    ) : "Select Package"}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -265,7 +261,7 @@ export default function PricingPage() {
                 Free Pickup & Delivery
               </h3>
               <p className="text-sm text-gray-600">
-                On orders above <strong className="text-green-700">₹10,000</strong>
+                On orders above <strong className="text-green-700">₹4,999</strong>
               </p>
             </motion.div>
             
@@ -282,7 +278,7 @@ export default function PricingPage() {
               </div>
               <h3 className="text-lg font-black text-gray-900 mb-2">₹100 Pickup Charge</h3>
               <p className="text-sm text-gray-600">
-                For orders <strong className="text-amber-700">less than ₹10,000</strong>
+                For orders <strong className="text-amber-700">less than ₹4,999</strong>
               </p>
             </motion.div>
           </div>

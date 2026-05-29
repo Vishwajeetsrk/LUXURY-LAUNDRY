@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Contact {
   id: string;
@@ -19,15 +19,15 @@ export default function AdminContactsPage() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  useEffect(() => { fetchContacts(); }, []);
-
-  const fetchContacts = async () => {
+  const fetchContacts = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/contact`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) setContacts(await res.json());
     } catch { /* ignore */ } finally { setLoading(false); }
-  };
+  }, [API]);
+
+  useEffect(() => { fetchContacts(); }, [fetchContacts]);
 
   const deleteContact = async (id: string) => {
     if (!confirm("Delete this inquiry?")) return;

@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -36,22 +43,12 @@ export default function RootLayout({
   return (
     <html lang="en-IN" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         />
       </head>
-      <body className="antialiased bg-gray-50 text-gray-900 font-sans selection:bg-primary-100 selection:text-primary-900">
+      <body className={`${inter.variable} antialiased bg-gray-50 text-gray-900 font-sans selection:bg-primary-100 selection:text-primary-900`}>
         <ContentProvider>
           <CartProvider>
             {children}

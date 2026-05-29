@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { buildApiUrl } from "@/lib/api";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -10,26 +11,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
+    let cancelled = false;
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        router.push("/login");
+        router.replace("/login");
         return;
       }
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       try {
-        const res = await fetch(`${API_URL}/api/auth/me`, {
+        const res = await fetch(buildApiUrl("/api/auth/me"), {
           headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
         if (!res.ok) throw new Error();
         const data = await res.json();
-        setUser(data);
+        if (!cancelled) setUser(data);
       } catch {
         localStorage.removeItem("token");
-        router.push("/login");
+        localStorage.removeItem("user");
+        router.replace("/login");
       }
     };
     checkAuth();
+    return () => { cancelled = true; };
   }, [router]);
 
   if (!user) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -73,7 +77,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
         <div className="p-4 border-t border-gray-200">
           <button 
-            onClick={() => { localStorage.removeItem("token"); router.push("/login"); }}
+            onClick={async () => {
+              try { await fetch(buildApiUrl("/api/auth/logout"), { method: "POST", credentials: "include" }); } catch {}
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              router.replace("/login");
+            }}
             className="flex items-center gap-3 px-4 py-3 text-red-600 font-medium hover:bg-red-50 rounded-xl w-full transition-colors"
           >
             <i className="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i>
