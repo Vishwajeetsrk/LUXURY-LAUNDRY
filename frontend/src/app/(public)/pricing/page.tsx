@@ -17,11 +17,11 @@ const priceCategories = [
     title: "MEN'S WEAR",
     icon: "fa-solid fa-shirt",
     items: [
-      { name: "Shirt/T-Shirt", image: "/images/items/shirt.png", dryClean: "200/200", steamIron: "120/120" },
-      { name: "Trouser/Jeans", image: "/images/items/trouser.png", dryClean: "200/210", steamIron: "120/130" },
-      { name: "Coat", image: "/images/items/coat.png", dryClean: "350", steamIron: "160" },
-      { name: "Mens Suit 2/3 pcs", image: "/images/items/coat.png", dryClean: "450/550", steamIron: "180/100" },
-      { name: "Kurta/Pyjama", image: "/images/items/shirt.png", dryClean: "220+/200+", steamIron: "130+/120+" },
+      { name: "Shirt/T-Shirt", image: "/images/items/shirt.png", dryClean: "200/200", steamIron: "20/20" },
+      { name: "Trouser/Jeans", image: "/images/items/trouser.png", dryClean: "200/210", steamIron: "20/30" },
+      { name: "Coat", image: "/images/items/coat.png", dryClean: "350", steamIron: "60" },
+      { name: "Mens Suit 2/3 pcs", image: "/images/items/coat.png", dryClean: "450/550", steamIron: "80/100" },
+      { name: "Kurta/Pyjama", image: "/images/items/shirt.png", dryClean: "220+/200+", steamIron: "30+/20+" },
       { name: "Achkan", image: "/images/items/coat.png", dryClean: "600", steamIron: "120" },
     ]
   },
@@ -30,14 +30,14 @@ const priceCategories = [
     subtitle: "(Delivery within 3 days)",
     icon: "fa-solid fa-person-dress",
     items: [
-      { name: "Kurta", image: "/images/items/dress.png", dryClean: "220+", steamIron: "130+" },
-      { name: "Salwar/Plazo", image: "/images/items/dress.png", dryClean: "200/200+", steamIron: "120/120+" },
-      { name: "Dupatta", image: "/images/items/dress.png", dryClean: "170+", steamIron: "120+" },
-      { name: "Saree/Blouse", image: "/images/items/dress.png", dryClean: "375+/210+", steamIron: "170+/130+" },
-      { name: "Dress", image: "/images/items/dress.png", dryClean: "400+", steamIron: "170+" },
-      { name: "Top", image: "/images/items/shirt.png", dryClean: "220+", steamIron: "130+" },
+      { name: "Kurta", image: "/images/items/dress.png", dryClean: "220+", steamIron: "30+" },
+      { name: "Salwar/Plazo", image: "/images/items/dress.png", dryClean: "200/200+", steamIron: "20/20+" },
+      { name: "Dupatta", image: "/images/items/dress.png", dryClean: "170+", steamIron: "20+" },
+      { name: "Saree/Blouse", image: "/images/items/dress.png", dryClean: "375+/210+", steamIron: "70+/30+" },
+      { name: "Dress", image: "/images/items/dress.png", dryClean: "400+", steamIron: "70+" },
+      { name: "Top", image: "/images/items/shirt.png", dryClean: "220+", steamIron: "30+" },
       { name: "Lehenga", image: "/images/items/dress.png", dryClean: "650+", steamIron: "130+" },
-      { name: "Skirt", image: "/images/items/dress.png", dryClean: "310+", steamIron: "150+" },
+      { name: "Skirt", image: "/images/items/dress.png", dryClean: "310+", steamIron: "50+" },
     ]
   },
   {
@@ -45,11 +45,11 @@ const priceCategories = [
     subtitle: "(Delivery within 3 days)",
     icon: "fa-solid fa-mitten",
     items: [
-      { name: "Jacket F/H Sleeves", image: "/images/items/coat.png", dryClean: "375+/310", steamIron: "170+/150" },
-      { name: "Sweater F/H Sleeves", image: "/images/items/sweater.png", dryClean: "280+/240", steamIron: "140+/130" },
-      { name: "Sweat Shirt", image: "/images/items/sweater.png", dryClean: "330", steamIron: "160" },
-      { name: "Long Coat", image: "/images/items/coat.png", dryClean: "480", steamIron: "190" },
-      { name: "Shawl/Pashmina", image: "/images/items/blanket.png", dryClean: "280+/610", steamIron: "140+/120" },
+      { name: "Jacket F/H Sleeves", image: "/images/items/coat.png", dryClean: "375+/310", steamIron: "70+/50" },
+      { name: "Sweater F/H Sleeves", image: "/images/items/sweater.png", dryClean: "280+/240", steamIron: "40+/30" },
+      { name: "Sweat Shirt", image: "/images/items/sweater.png", dryClean: "330", steamIron: "60" },
+      { name: "Long Coat", image: "/images/items/coat.png", dryClean: "480", steamIron: "90" },
+      { name: "Shawl/Pashmina", image: "/images/items/blanket.png", dryClean: "280+/610", steamIron: "40+/120" },
       { name: "Leather Jacket", image: "/images/items/coat.png", dryClean: "600", steamIron: "120" },
     ]
   },
@@ -96,7 +96,7 @@ const priceCategories = [
     items: [
       { name: "5 Garments Approx /Kg", image: "/images/items/laundry_basket.png", dryClean: "—", steamIron: null },
       { name: "Wash & Steam Iron", image: "/images/items/laundry_basket.png", price: "135/Kg", steamIron: null },
-      { name: "Wash & Fold", image: "/images/items/laundry_basket.png", price: "185/Kg", steamIron: null },
+      { name: "Wash & Fold", image: "/images/items/laundry_basket.png", price: "85/Kg", steamIron: null },
     ]
   }
 ];
@@ -301,6 +301,11 @@ export default function PricingPage() {
             Updated Price List
           </h2>
           <p className="text-gray-600 text-center mb-12">Comprehensive pricing for all your garment needs</p>
+          <div className="mb-8 text-center">
+            <span className="inline-block bg-amber-50 border border-amber-200 text-amber-800 px-6 py-3 rounded-lg font-medium shadow-sm">
+              <i className="fa-solid fa-truck-fast mr-2"></i> Note: For orders less than ₹100, an additional ₹100 delivery fee will be applied.
+            </span>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {priceCategories.map((category, idx) => (
