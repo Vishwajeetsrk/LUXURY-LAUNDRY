@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { buildApiUrl } from "@/lib/api";
 import { isPanelRole } from "@/lib/auth";
@@ -52,13 +53,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-              <i className="fa-solid fa-shirt text-white" />
-            </div>
-            <span className="text-xl font-black text-gray-900">
-              LUXURY <span className="text-primary-500">LAUNDRY</span>
-            </span>
+          <Link href="/" className="inline-block">
+            <Image src="/logo.png" alt="Luxury Laundry" width={200} height={50} className="mx-auto object-contain h-12" />
           </Link>
           <h2 className="mt-6 text-2xl font-black text-gray-900">Welcome back</h2>
           <p className="mt-1 text-sm text-gray-500">Sign in to your account</p>
