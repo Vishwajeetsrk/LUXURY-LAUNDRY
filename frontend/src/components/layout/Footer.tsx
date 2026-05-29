@@ -41,9 +41,9 @@ export default function Footer() {
               <Image 
                 src="/logo.png"
                 alt="Luxury Laundry"
-                width={200}
-                height={50}
-                className="w-auto h-12 object-contain filter invert brightness-0"
+                width={300}
+                height={80}
+                className="w-auto h-20 object-contain filter invert brightness-0"
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
