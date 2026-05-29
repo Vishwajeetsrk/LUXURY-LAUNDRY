@@ -28,6 +28,28 @@ export default function CustomerOrdersPage() {
     fetchOrders();
   }, []);
 
+  const downloadInvoice = async (invoiceId: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    try {
+      const res = await fetch(`${API_URL}/api/invoices/${invoiceId}/pdf`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Invoice-${invoiceId}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) return <div>Loading orders...</div>;
 
   return (
@@ -83,15 +105,13 @@ export default function CustomerOrdersPage() {
                         Track Order
                       </a>
                       {order.invoice?.id && (
-                        <a 
-                          href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/invoices/${order.invoice.id}/pdf`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button 
+                          onClick={() => downloadInvoice(order.invoice.id)}
                           className="text-primary-600 hover:text-primary-800 p-1.5"
                           title="Download Invoice"
                         >
                           <i className="fa-solid fa-file-pdf"></i>
-                        </a>
+                        </button>
                       )}
                     </div>
                   </td>

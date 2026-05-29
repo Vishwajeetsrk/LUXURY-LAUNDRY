@@ -52,7 +52,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="Logo" className="h-10 object-contain" />
+            <img src="/logo.png" alt="Logo" className="h-16 object-contain" />
           </Link>
         </div>
         <div className="p-4 flex-grow">

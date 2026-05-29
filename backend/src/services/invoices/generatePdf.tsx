@@ -36,10 +36,10 @@ export const InvoiceDocument = ({ invoice, logoBuffer, qrBuffer }: { invoice: an
       <View style={styles.header}>
         <View style={styles.logoSection}>
           {logoBuffer && <Image src={logoBuffer} style={styles.logo} />}
-          {!logoBuffer && <Text style={styles.businessName}>LUXWASH</Text>}
+          {!logoBuffer && <Text style={styles.businessName}>LuxWash Jaipur</Text>}
           <Text style={styles.businessDetails}>123 Laundry Street, Jaipur, Rajasthan</Text>
-          <Text style={styles.businessDetails}>GSTIN: 08AABCU9603R1ZM</Text>
           <Text style={styles.businessDetails}>Phone: +91 9663574728</Text>
+          <Text style={styles.businessDetails}>Email: support@luxwash.in</Text>
         </View>
         <View>
           <Text style={styles.invoiceTitle}>INVOICE</Text>

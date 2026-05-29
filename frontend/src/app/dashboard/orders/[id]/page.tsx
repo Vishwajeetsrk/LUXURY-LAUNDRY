@@ -62,6 +62,30 @@ export default function OrderDetailsPage() {
 
   const currentStepIndex = order.status === "CANCELLED" ? -1 : statusSteps.indexOf(order.status);
 
+  const downloadInvoice = async (invoiceId: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    try {
+      const res = await fetch(`${API_URL}/api/invoices/${invoiceId}/pdf`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Invoice-${invoiceId}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error("Failed to download invoice");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
@@ -69,14 +93,12 @@ export default function OrderDetailsPage() {
           <i className="fa-solid fa-arrow-left"></i> Back to Orders
         </Link>
         {order.invoice?.id && (
-          <a 
-            href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/invoices/${order.invoice.id}/pdf`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary-sm py-2 px-4 rounded-md flex items-center gap-2"
+          <button 
+            onClick={() => downloadInvoice(order.invoice.id)}
+            className="btn-primary-sm py-2 px-4 rounded-md flex items-center gap-2 text-white bg-primary-600 hover:bg-primary-700"
           >
             <i className="fa-solid fa-file-pdf"></i> Download Invoice
-          </a>
+          </button>
         )}
       </div>
 

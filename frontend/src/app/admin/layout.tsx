@@ -125,7 +125,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         <div className="h-16 flex items-center gap-2 px-5 border-b border-gray-100 flex-shrink-0">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="Logo" className="h-10 object-contain" />
+            <img src="/logo.png" alt="Logo" className="h-16 object-contain" />
           </Link>
           <button className="ml-auto lg:hidden p-1" onClick={() => setSidebarOpen(false)}>
             <i className="fa-solid fa-xmark text-gray-400" />
