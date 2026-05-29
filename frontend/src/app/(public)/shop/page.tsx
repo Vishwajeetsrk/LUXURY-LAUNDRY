@@ -82,6 +82,31 @@ const products = [
   },
 ];
 
+function getDiscountPercentage(name: string) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return 10 + (Math.abs(hash) % 31); // 10% to 40%
+}
+
+function getImageForService(name: string) {
+  const n = name.toLowerCase();
+  if (n.includes("shoe") || n.includes("sneaker") || n.includes("boot") || n.includes("canvas")) return "/images/shoes.png";
+  if (n.includes("bag") || n.includes("wallet") || n.includes("case") || n.includes("handbag")) return "/images/bag.png";
+  if (n.includes("blanket") || n.includes("quilt") || n.includes("duvet") || n.includes("bed sheet")) return "/images/blanket.png";
+  if (n.includes("curtain") || n.includes("blind") || n.includes("carpet")) return "/images/curtain.png";
+  if (n.includes("saree") || n.includes("lehenga") || n.includes("salwar") || n.includes("dress") || n.includes("skirt") || n.includes("plazo") || n.includes("dupatta") || n.includes("blouse") || n.includes("top")) return "/images/dress.png";
+  if (n.includes("sweater") || n.includes("jacket") || n.includes("pashmina") || n.includes("shawl") || n.includes("sweat shirt")) return "/images/sweater.png";
+  if (n.includes("suit") && !n.includes("case")) return "/images/coat.png";
+  if (n.includes("coat") || n.includes("achkan")) return "/images/coat.png";
+  if (n.includes("trouser") || n.includes("jeans") || n.includes("pyjama")) return "/images/trouser.png";
+  if (n.includes("shirt") || n.includes("kurta") || n.includes("t-shirt")) return "/images/shirt.png";
+  if (n.includes("dry clean")) return "/images/dry_cleaning.png";
+  if (n.includes("iron")) return "/images/steam_iron.png";
+  return "/images/wash_fold.png";
+}
+
 export default function ShopPage() {
   const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
@@ -131,19 +156,23 @@ export default function ShopPage() {
 
         const activeServices = sList.filter((s: any) => s.isActive !== false);
 
-        const mappedProducts = activeServices.map((s: any, idx: number) => ({
-          id: s.id,
-          name: s.name,
-          price: s.pricePerUnit,
-          originalPrice: s.pricePerUnit * 1.2,
-          image: s.imageUrl || "/images/wash_fold.png",
-          badge: idx === 0 ? "Best Seller" : idx === 1 ? "Premium" : null,
-          badgeColor: idx === 0 ? "bg-green-500" : "bg-primary-500",
-          rating: 4.8 + Math.random() * 0.2,
-          reviews: Math.floor(Math.random() * 300) + 50,
-          description: s.description || "Premium laundry service",
-          unit: s.unit,
-        }));
+        const mappedProducts = activeServices.map((s: any, idx: number) => {
+          const discountPercent = getDiscountPercentage(s.name);
+          const origPrice = Math.round(s.pricePerUnit / (1 - discountPercent / 100));
+          return {
+            id: s.id,
+            name: s.name,
+            price: s.pricePerUnit,
+            originalPrice: origPrice,
+            image: s.imageUrl || getImageForService(s.name),
+            badge: idx === 0 ? "Best Seller" : idx === 1 ? "Premium" : null,
+            badgeColor: idx === 0 ? "bg-green-500" : "bg-primary-500",
+            rating: 4.8 + Math.random() * 0.2,
+            reviews: Math.floor(Math.random() * 300) + 50,
+            description: s.description || `${s.category || "Premium"} service`,
+            unit: s.unit,
+          };
+        });
 
         if (!cancelled) setDbServices(mappedProducts);
       } catch (e) {
