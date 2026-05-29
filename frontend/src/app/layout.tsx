@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "../context/CartContext";
 import { ContentProvider } from "../context/ContentContext";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "../components/ui/ThemeProvider";
 
 export default function RootLayout({
   children,

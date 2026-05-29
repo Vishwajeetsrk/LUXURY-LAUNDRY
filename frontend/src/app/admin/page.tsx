@@ -155,14 +155,14 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <input 
               type="date" 
-              className="border rounded px-2 py-1.5 text-sm"
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
               value={dateRange.startDate}
               onChange={(e) => setDateRange({...dateRange, startDate: e.target.value})}
             />
             <span className="text-gray-400">to</span>
             <input 
               type="date" 
-              className="border rounded px-2 py-1.5 text-sm"
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
               value={dateRange.endDate}
               onChange={(e) => setDateRange({...dateRange, endDate: e.target.value})}
             />
