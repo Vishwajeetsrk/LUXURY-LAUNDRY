@@ -157,15 +157,26 @@ The application is fully configured for continuous deployment using modern cloud
 
 ## 🔑 Demo Credentials
 
-| Role     | Email                   | Password |
-|----------|-------------------------|----------|
-| Admin    | vishwajeetsrk@gmail.com | 12345678 |
+| Role     | Email                   | Password | Access Level |
+|----------|-------------------------|----------|--------------|
+| Admin    | vishwajeetsrk@gmail.com | 12345678 | Full system control, analytics, financial settings |
+| Admin    | admin@luxwash.com       | password123 | Full system control |
+| Staff    | staff@luxwash.com       | password123 | Can manage orders, services, and customers |
+| Delivery | delivery@luxwash.com    | password123 | Can view assigned orders and update delivery status |
+| Customer | customer@luxwash.com    | password123 | Standard user, can book orders and leave reviews |
+
+**Note on Role-Based Access Control (RBAC):**
+The backend enforces strict permissions via the `backend/src/middleware/auth.ts` middleware. 
+- The `panelAccess` logic ensures only `SUPER_ADMIN`, `ADMIN`, `STAFF`, and `DELIVERY` roles can access the `/admin` routes.
+- The `requirePermission` logic ensures that only high-level admins can modify financial settings, change business data, or delete users.
+- The `adminOnly` logic completely shields sensitive API endpoints (like generating API keys or WhatsApp setup) from basic Staff and Delivery users.
 
 ## 📊 Database Schema Highlights
 
 - **User** — Customers, Staff, Delivery, Admins
 - **Order** — Customer orders for specific laundry services
-- **Service** & **ShopProduct** — Available offerings
+- **Service** & **ShopProduct** — Available offerings (with `imageUrl`, `originalPrice`, `rating`, `reviewCount` fields)
+- **Review** — Customer 1-5 star ratings and comments, moderated by admin with `isPublished` flag
 - **Invoice** & **InvoiceItem** — Advanced billing system with tax breakdowns (CGST/SGST)
 - **WhatsAppLog** — Tracking external WhatsApp communications
 - **AuditLog** — Tracking admin actions

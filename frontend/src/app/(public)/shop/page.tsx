@@ -325,19 +325,21 @@ export default function ShopPage() {
                   {/* Rating */}
                   <div className="flex items-center gap-2 mb-2">
                     <div className="flex items-center gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <i
-                          key={i}
-                          className={`fa-solid fa-star text-xs ${
-                            i < Math.floor(product.rating)
-                              ? "text-yellow-400"
-                              : "text-gray-200"
-                          }`}
-                        />
-                      ))}
+                      {[1, 2, 3, 4, 5].map((star) => {
+                        const full = product.rating >= star;
+                        const half = !full && product.rating >= star - 0.5;
+                        return (
+                          <i
+                            key={star}
+                            className={`fa-solid ${half ? 'fa-star-half-stroke' : 'fa-star'} text-xs ${
+                              full || half ? 'text-yellow-400' : 'text-gray-200'
+                            }`}
+                          />
+                        );
+                      })}
                     </div>
                     <span className="text-xs text-gray-500">
-                      {product.rating} ({product.reviews})
+                      {product.rating.toFixed(1)} ({product.reviews})
                     </span>
                   </div>
 
