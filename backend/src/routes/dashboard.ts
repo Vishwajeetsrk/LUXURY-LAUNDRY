@@ -7,7 +7,18 @@ const router = Router();
 // GET /api/dashboard/stats — admin only
 router.get("/stats", authenticate, requirePermission("dashboard:read"), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const [totalOrders, totalCustomers, totalServices, pendingOrders, revenueResult, recentOrders, allCompletedOrders] = await Promise.all([
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    const [
+      totalOrders, totalCustomers, totalServices, pendingOrders, revenueResult, recentOrders, allCompletedOrders,
+      ordersThisMonth, ordersLastMonth,
+      customersThisMonth, customersLastMonth,
+      revenueThisMonthResult, revenueLastMonthResult,
+      servicesThisMonth, servicesLastMonth
+    ] = await Promise.all([
       prisma.order.count(),
       prisma.user.count({ where: { role: "CUSTOMER" } }),
       prisma.service.count({ where: { isActive: true } }),
@@ -24,8 +35,29 @@ router.get("/stats", authenticate, requirePermission("dashboard:read"), async (r
       prisma.order.findMany({
         where: { status: { in: ["DELIVERED", "COMPLETED"] } },
         select: { totalAmount: true, createdAt: true },
-      })
+      }),
+      // Trend Data
+      prisma.order.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.order.count({ where: { createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } } }),
+      prisma.user.count({ where: { role: "CUSTOMER", createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.user.count({ where: { role: "CUSTOMER", createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } } }),
+      prisma.order.aggregate({ _sum: { totalAmount: true }, where: { createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.order.aggregate({ _sum: { totalAmount: true }, where: { createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } } }),
+      prisma.service.count({ where: { isActive: true, createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.service.count({ where: { isActive: true, createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } } }),
     ]);
+
+    const calculateTrend = (current: number, previous: number) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return Math.round(((current - previous) / previous) * 100);
+    };
+
+    const trends = {
+      orders: calculateTrend(ordersThisMonth, ordersLastMonth),
+      customers: calculateTrend(customersThisMonth, customersLastMonth),
+      revenue: calculateTrend(revenueThisMonthResult._sum.totalAmount || 0, revenueLastMonthResult._sum.totalAmount || 0),
+      services: calculateTrend(servicesThisMonth, servicesLastMonth),
+    };
 
     // Calculate revenue by month for chart
     const revenueByMonth: Record<string, number> = {};
@@ -58,6 +90,7 @@ router.get("/stats", authenticate, requirePermission("dashboard:read"), async (r
       totalRevenue: (revenueResult as any)?._sum?.totalAmount || 0,
       totalServices,
       pendingOrders,
+      trends,
       chartData,
       recentOrders: recentOrders.map((o: any) => ({
         id: o.id,

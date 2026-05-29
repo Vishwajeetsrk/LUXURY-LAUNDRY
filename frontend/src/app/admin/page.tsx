@@ -20,13 +20,19 @@ interface DashboardStats {
     createdAt: string;
   }>;
   chartData?: Array<{ month: string; revenue: number }>;
+  trends?: {
+    orders: number;
+    customers: number;
+    revenue: number;
+    services: number;
+  };
 }
 
 const statCards = [
-  { key: "totalOrders", label: "Total Orders", icon: "fa-solid fa-box", color: "bg-primary-500", textColor: "text-primary-600", bgLight: "bg-primary-50" },
-  { key: "totalCustomers", label: "Customers", icon: "fa-solid fa-users", color: "bg-green-500", textColor: "text-green-600", bgLight: "bg-green-50" },
-  { key: "totalRevenue", label: "Revenue", icon: "fa-solid fa-indian-rupee-sign", color: "bg-amber-500", textColor: "text-amber-600", bgLight: "bg-amber-50", prefix: "₹" },
-  { key: "totalServices", label: "Services", icon: "fa-solid fa-concierge-bell", color: "bg-purple-500", textColor: "text-purple-600", bgLight: "bg-purple-50" },
+  { key: "totalOrders", trendKey: "orders", label: "Total Orders", icon: "fa-solid fa-box", color: "bg-primary-500", textColor: "text-primary-600", bgLight: "bg-primary-50" },
+  { key: "totalCustomers", trendKey: "customers", label: "Customers", icon: "fa-solid fa-users", color: "bg-green-500", textColor: "text-green-600", bgLight: "bg-green-50" },
+  { key: "totalRevenue", trendKey: "revenue", label: "Revenue", icon: "fa-solid fa-indian-rupee-sign", color: "bg-amber-500", textColor: "text-amber-600", bgLight: "bg-amber-50", prefix: "₹" },
+  { key: "totalServices", trendKey: "services", label: "Services", icon: "fa-solid fa-concierge-bell", color: "bg-purple-500", textColor: "text-purple-600", bgLight: "bg-purple-50" },
 ];
 
 const statusColors: Record<string, string> = {
@@ -180,30 +186,36 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statCards.map((card) => (
-          <div key={card.key} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <div className={`w-10 h-10 ${card.bgLight} rounded-lg flex items-center justify-center`}>
-                <i className={`${card.icon} ${card.textColor}`} />
+        {statCards.map((card) => {
+          const trend = stats.trends?.[card.trendKey as keyof typeof stats.trends] || 0;
+          const isPositive = trend >= 0;
+          return (
+            <div key={card.key} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-3">
+                <div className={`w-10 h-10 ${card.bgLight} rounded-lg flex items-center justify-center`}>
+                  <i className={`${card.icon} ${card.textColor}`} />
+                </div>
+                {!loading && (
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isPositive ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+                    <i className={`fa-solid ${isPositive ? 'fa-arrow-up' : 'fa-arrow-down'} text-[10px] mr-0.5`} />
+                    {Math.abs(trend)}%
+                  </span>
+                )}
               </div>
-              <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                <i className="fa-solid fa-arrow-up text-[10px] mr-0.5" />
-                12%
-              </span>
+              <div className="text-2xl font-black text-gray-900">
+                {loading ? (
+                  <div className="h-8 w-20 skeleton rounded" />
+                ) : (
+                  <>
+                    {card.prefix || ""}
+                    {(stats as any)[card.key]?.toLocaleString() || 0}
+                  </>
+                )}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">{card.label}</p>
             </div>
-            <div className="text-2xl font-black text-gray-900">
-              {loading ? (
-                <div className="h-8 w-20 skeleton rounded" />
-              ) : (
-                <>
-                  {card.prefix || ""}
-                  {(stats as any)[card.key]?.toLocaleString() || 0}
-                </>
-              )}
-            </div>
-            <p className="text-xs text-gray-500 mt-1">{card.label}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Quick Actions + Pending Orders */}

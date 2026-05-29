@@ -20,11 +20,13 @@ A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) bui
 - **Order History (`/dashboard/orders`):** Track current order statuses (Pending, Processing, Delivered, etc.).
 - **Invoice Tracking (`/dashboard/invoices`):** View, download, and track payment status for past and current invoices.
 - **Shop & Cart (`/shop`):** Browse service packages, add items to cart, and checkout seamlessly.
+- **Coupon System:** Apply dynamic promotional codes and automatically calculate discounts before checkout.
 - **Subscriptions & Packages:** Request monthly/yearly laundry subscription plans or buy prepaid packages to get wallet credits.
 - **Wallet System & Welcome Bonus:** New users can receive an automated welcome bonus, and users can pay for orders via their wallet balance.
+- **Dark Mode UI:** Modern dark/light theme toggle for a premium viewing experience.
 
 ### 🛡️ Admin Dashboard (`/admin`)
-- **Overview Dashboard:** High-level statistics, revenue, recent orders, and quick actions.
+- **Real-Time Analytics:** Live dashboard with WebSocket (Socket.io) integration for real-time order updates and percentage growth trends (Orders, Revenue, Customers).
 - **Order Management (`/admin/orders`):** View all customer orders, filter by status, update states, and assign delivery dates.
 - **Invoice Management (`/admin/invoices`):** 
   - Automatically or manually generate invoices linked to orders.
@@ -39,6 +41,8 @@ A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) bui
 - **Packages Management (`/admin/packages`):** Create and manage subscription packages with automated wallet credit logic and discounts.
 - **Offers & Promotions (`/admin/offers`):** Generate and manage custom discount codes, tracking usage limits and conditions.
 - **Site Settings & Welcome Bonus (`/admin/settings`):** Global configurations like company phone, email, social links, and auto-assignable Welcome Bonus wallet credits.
+- **Cloudinary Image Uploads:** Direct secure integration for website assets and service images.
+- **Premium UI/UX:** Pulse skeletons for loading states and beautiful empty state graphics across all grids and tables.
 
 ## 📁 Project Structure
 
