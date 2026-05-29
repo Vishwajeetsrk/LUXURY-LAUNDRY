@@ -20,6 +20,12 @@ export default function CartPage() {
   const [whatsappLink, setWhatsappLink] = useState("");
   const [walletBalance, setWalletBalance] = useState(0);
   const [useWallet, setUseWallet] = useState(true);
+  
+  // Offers/Coupons
+  const [offers, setOffers] = useState<any[]>([]);
+  const [offerInput, setOfferInput] = useState("");
+  const [appliedOffer, setAppliedOffer] = useState<any>(null);
+  const [offerError, setOfferError] = useState("");
 
   const router = useRouter();
 
@@ -60,8 +66,62 @@ export default function CartPage() {
         console.error(err);
       }
     };
+
+    const fetchOffers = async () => {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${API_URL}/api/offers`);
+        if (res.ok) {
+          const data = await res.json();
+          setOffers(data.data || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch offers", err);
+      }
+    };
+
     fetchUser();
+    fetchOffers();
   }, [router]);
+
+  const handleApplyOffer = () => {
+    setOfferError("");
+    if (!offerInput.trim()) return;
+    
+    const matchedOffer = offers.find(o => o.code.toUpperCase() === offerInput.toUpperCase());
+    if (!matchedOffer) {
+      setOfferError("Invalid or expired offer code.");
+      setAppliedOffer(null);
+      return;
+    }
+    if (cartTotal < matchedOffer.minOrderValue) {
+      setOfferError(`Minimum order value of ₹${matchedOffer.minOrderValue} required for this code.`);
+      setAppliedOffer(null);
+      return;
+    }
+    setAppliedOffer(matchedOffer);
+    setOfferInput("");
+  };
+
+  const removeOffer = () => {
+    setAppliedOffer(null);
+  };
+
+  const calculateDiscount = () => {
+    if (!appliedOffer) return 0;
+    if (appliedOffer.discountType === "PERCENTAGE") {
+      const calc = cartTotal * (appliedOffer.discountValue / 100);
+      return appliedOffer.maxDiscount ? Math.min(calc, appliedOffer.maxDiscount) : calc;
+    }
+    return appliedOffer.discountValue;
+  };
+
+  const discountAmount = calculateDiscount();
+  const subtotalAfterDiscount = Math.max(0, cartTotal - discountAmount);
+  const finalDeliveryCharge = subtotalAfterDiscount >= 4999 ? 0 : 100;
+  const totalBeforeWallet = subtotalAfterDiscount + finalDeliveryCharge;
+  const finalWalletDeduction = useWallet ? Math.min(walletBalance, totalBeforeWallet) : 0;
+  const estimatedTotal = Math.max(0, totalBeforeWallet - finalWalletDeduction);
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +187,8 @@ export default function CartPage() {
             deliveryInstructions: notes,
             notes: "Ordered via Checkout",
             deliveryCharge: currentDeliveryCharge,
-            useWallet: useWallet
+            useWallet: useWallet,
+            offerCode: appliedOffer ? appliedOffer.code : undefined
           }),
         });
 
@@ -267,12 +328,29 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-gray-500">
                     <span>Pickup & Delivery</span>
-                    {cartTotal >= 4999 ? (
+                    {subtotalAfterDiscount >= 4999 ? (
                       <span className="text-green-500">Free</span>
                     ) : (
                       <span>₹100</span>
                     )}
                   </div>
+                  
+                  {/* Applied Offer display */}
+                  {appliedOffer && (
+                    <div className="flex justify-between text-green-600 font-medium bg-green-50 p-2 rounded-lg -mx-2 px-2">
+                      <div className="flex items-center gap-1">
+                        <i className="fa-solid fa-tag text-xs"></i>
+                        <span>{appliedOffer.code} applied</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
+                        <button onClick={removeOffer} className="text-red-500 hover:text-red-700 ml-1" title="Remove offer">
+                          <i className="fa-solid fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {walletBalance > 0 && (
                     <div className="flex justify-between items-center py-2">
                       <label className="flex items-center gap-2 cursor-pointer">
@@ -286,17 +364,41 @@ export default function CartPage() {
                       </label>
                       {useWallet && (
                         <span className="text-green-500 text-sm font-bold">
-                          -₹{Math.min(walletBalance, cartTotal + (cartTotal >= 4999 ? 0 : 100)).toLocaleString('en-IN')}
+                          -₹{finalWalletDeduction.toLocaleString('en-IN')}
                         </span>
                       )}
                     </div>
                   )}
                 </div>
                 
-                <div className="flex justify-between text-xl font-black text-gray-900 mb-8">
+                <div className="flex justify-between text-xl font-black text-gray-900 mb-6">
                   <span>Estimated Total</span>
-                  <span>₹{Math.max(0, (cartTotal >= 4999 ? cartTotal : cartTotal + 100) - (useWallet ? walletBalance : 0)).toLocaleString('en-IN')}</span>
+                  <span>₹{estimatedTotal.toLocaleString('en-IN')}</span>
                 </div>
+
+                {/* Apply Promo Code UI */}
+                {!appliedOffer && (
+                  <div className="mb-6">
+                    <label className="block text-sm font-bold text-gray-900 mb-2">Offers & Promotions</label>
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={offerInput}
+                        onChange={(e) => setOfferInput(e.target.value.toUpperCase())}
+                        placeholder="Enter Promo Code" 
+                        className="flex-1 px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none uppercase"
+                      />
+                      <button 
+                        type="button"
+                        onClick={handleApplyOffer}
+                        className="px-4 py-2 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    {offerError && <p className="text-red-500 text-xs mt-1 font-medium">{offerError}</p>}
+                  </div>
+                )}
                 
                 <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded-lg mb-6 font-medium border border-blue-100">
                   <i className="fa-solid fa-info-circle mr-1"></i>
@@ -383,8 +485,8 @@ export default function CartPage() {
 
                   {paymentMethod === 'QR' && (
                     <div className="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-200">
-                      <p className="text-xs text-gray-500 mb-2 font-medium">Scan QR to pay ₹{cartTotal >= 4999 ? cartTotal : cartTotal + 100}</p>
-                      <Image src="/images/qr.jpeg" alt="UPI QR Code" width={128} height={128} className="w-32 h-32 object-cover rounded-lg shadow-sm mb-2" />
+                      <p className="text-xs text-gray-500 mb-2 font-medium">Scan QR to pay ₹{estimatedTotal.toLocaleString('en-IN')}</p>
+                      <Image src="/images/upi_qr.png" alt="UPI QR Code" width={128} height={128} className="w-32 h-32 object-contain rounded-lg shadow-sm mb-2 bg-white p-2 border border-gray-200" />
                       <p className="text-[10px] text-gray-400">Payment will be verified upon delivery.</p>
                     </div>
                   )}

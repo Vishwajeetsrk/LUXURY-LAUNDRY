@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "../../../context/CartContext";
+import { Skeleton } from "../../../components/ui/Skeleton";
+import { EmptyState } from "../../../components/ui/EmptyState";
 
 const products = [
   {
@@ -84,7 +86,8 @@ export default function ShopPage() {
   const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("popularity");
-  const [dbServices, setDbServices] = useState<any[]>(products);
+  const [dbServices, setDbServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -146,6 +149,8 @@ export default function ShopPage() {
       } catch (e) {
         console.error("Shop load error:", e);
         if (!cancelled) setDbServices(products);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     };
 
@@ -230,11 +235,30 @@ export default function ShopPage() {
 
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedProducts.length === 0 ? (
-              <div className="col-span-full text-center py-12">
-                <i className="fa-solid fa-box-open text-4xl text-gray-300 mb-3" />
-                <h3 className="text-lg font-bold text-gray-900">No services found</h3>
-                <p className="text-gray-500">Try adjusting your search query.</p>
+            {loading ? (
+              // Loading Skeletons
+              [...Array(6)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+                  <Skeleton className="w-full h-52 rounded-none" />
+                  <div className="p-5">
+                    <Skeleton className="w-16 h-3 mb-3" />
+                    <Skeleton className="w-3/4 h-5 mb-3" />
+                    <Skeleton className="w-full h-4 mb-2" />
+                    <Skeleton className="w-5/6 h-4 mb-5" />
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="w-20 h-6" />
+                      <Skeleton className="w-20 h-10 rounded-lg" />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : filteredAndSortedProducts.length === 0 ? (
+              <div className="col-span-full">
+                <EmptyState 
+                  icon="fa-box-open" 
+                  title="No services found" 
+                  description="We couldn't find any services matching your search criteria. Try adjusting your search query."
+                />
               </div>
             ) : filteredAndSortedProducts.map((product) => (
               <div

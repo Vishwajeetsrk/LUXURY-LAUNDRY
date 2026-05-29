@@ -55,6 +55,8 @@ import {
   getSortedRowModel,
   SortingState
 } from '@tanstack/react-table';
+import { Skeleton } from "../../../components/ui/Skeleton";
+import { EmptyState } from "../../../components/ui/EmptyState";
 
 interface Customer { id: string; name: string; email: string }
 
@@ -424,7 +426,7 @@ export default function AdminOrdersPage() {
                 [...Array(5)].map((_, i) => (
                   <tr key={i}>
                     {[...Array(9)].map((_, j) => (
-                      <td key={j}><div className="h-4 w-16 skeleton rounded" /></td>
+                      <td key={j} className="p-4"><Skeleton className="h-4 w-full" /></td>
                     ))}
                   </tr>
                 ))
@@ -440,8 +442,12 @@ export default function AdminOrdersPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="text-center text-gray-400 py-12">
-                    {filter !== "ALL" ? `No ${filter.replace(/_/g, " ").toLowerCase()} orders found.` : "No orders yet."}
+                  <td colSpan={9} className="p-8">
+                    <EmptyState 
+                      icon="fa-receipt" 
+                      title="No orders found" 
+                      description={filter !== "ALL" ? `We couldn't find any ${filter.replace(/_/g, " ").toLowerCase()} orders.` : "No orders have been placed yet."} 
+                    />
                   </td>
                 </tr>
               )}
