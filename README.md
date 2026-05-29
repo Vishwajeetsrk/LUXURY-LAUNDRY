@@ -19,11 +19,11 @@ A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) bui
 - **Order Placement:** Users can book laundry services with specific pickup/delivery instructions.
 - **Order History (`/dashboard/orders`):** Track current order statuses (Pending, Processing, Delivered, etc.).
 - **Invoice Tracking (`/dashboard/invoices`):** View, download, and track payment status for past and current invoices.
-- **Shop & Cart (`/shop`):** Browse service packages, add items to cart, and checkout seamlessly.
+- **Shop & Cart (`/shop`):** Browse service packages, view AI-matched luxury product images, add items to cart, and checkout seamlessly.
 - **Coupon System:** Apply dynamic promotional codes and automatically calculate discounts before checkout.
 - **Subscriptions & Packages:** Request monthly/yearly laundry subscription plans or buy prepaid packages to get wallet credits.
 - **Wallet System & Welcome Bonus:** New users can receive an automated welcome bonus, and users can pay for orders via their wallet balance.
-- **Dark Mode UI:** Modern dark/light theme toggle for a premium viewing experience.
+- **Customer Reviews (`/dashboard/orders`):** Customers can leave a 1-5 star review and written feedback on any order marked as "DELIVERED".
 
 ### 🛡️ Admin Dashboard (`/admin`)
 - **Real-Time Analytics:** Live dashboard with WebSocket (Socket.io) integration for real-time order updates and percentage growth trends (Orders, Revenue, Customers).
@@ -34,15 +34,15 @@ A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) bui
   - Track payment status (Paid, Unpaid, Overdue).
   - Auto-generated sequential invoice numbers.
 - **Customer Management (`/admin/customers`):** View registered users, track their order history, and update their details/discounts.
-- **Service & Product Catalog (`/admin/services`, `/admin/shop`):** Add, edit, disable, or delete laundry services and shop products dynamically.
+- **Service & Product Catalog (`/admin/services`):** Add, edit, disable, or delete laundry services. Now supports setting custom **Image URLs** and **Original Prices** to manually override dynamic discounts.
 - **Content Management System (`/admin/content`):** Dynamically edit website text, banners, and descriptions without touching code.
+- **Reviews Moderation (`/admin/reviews`):** Review customer feedback, delete spam, and securely toggle a review's `Published` status on or off to push it to the public homepage.
 - **WhatsApp Integration (`/admin/whatsapp`):** View logs of automated WhatsApp messages (order updates, invoice links) sent to customers via UltraMsg.
 - **Inquiries (`/admin/contacts`):** View and respond to customer queries from the Contact Us form.
 - **Packages Management (`/admin/packages`):** Create and manage subscription packages with automated wallet credit logic and discounts.
 - **Offers & Promotions (`/admin/offers`):** Generate and manage custom discount codes, tracking usage limits and conditions.
 - **Site Settings & Welcome Bonus (`/admin/settings`):** Global configurations like company phone, email, social links, and auto-assignable Welcome Bonus wallet credits.
-- **Cloudinary Image Uploads:** Direct secure integration for website assets and service images.
-- **Premium UI/UX:** Pulse skeletons for loading states and beautiful empty state graphics across all grids and tables.
+- **Premium UI/UX (Luxury Theme):** The entire application features a premium "Luxury Gold & Royal Navy" theme with glassmorphism effects (`backdrop-filter`), hover glow effects, and fintech-level data tables.
 
 ## 📁 Project Structure
 
@@ -140,9 +140,20 @@ There are two ways to view all registered users and customers:
 If you want direct database access to view the `User` table:
 ```bash
 cd backend
-npx prisma studio
-```
 *(This opens a clean UI at http://localhost:5555 where you can directly view and edit the database tables).*
+
+---
+
+### 5. Deployment Links & Live Environments
+
+The application is fully configured for continuous deployment using modern cloud providers.
+
+1. **Frontend (Vercel):** [https://luxurylaundry.vercel.app](https://luxurylaundry.vercel.app)
+   - *Pulls from GitHub `main` branch.*
+   - *Environment variables securely stored in Vercel settings.*
+2. **Backend API (Render):** [https://luxury-laundry.onrender.com](https://luxury-laundry.onrender.com)
+   - *Deployed via `render.yaml` infrastructure-as-code.*
+3. **Database (Supabase):** Managed PostgreSQL via Supabase connection strings.
 
 ## 🔑 Demo Credentials
 
