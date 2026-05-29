@@ -63,42 +63,79 @@ LAUNDRYYY/
 └── README.md
 ```
 
-## 🚀 Quick Start (Local)
+## 🚀 Operations & Setup Guide (How to Run Everything)
 
-### Prerequisites
-- Node.js 18+ installed
-- npm or yarn
-- A PostgreSQL Database (e.g., local Postgres or Supabase)
+### 1. Database Setup (PostgreSQL)
+The application uses PostgreSQL as its database. You can either use a local Postgres installation or a cloud provider like [Supabase](https://supabase.com/).
 
-### Environment Variables
-The backend needs a `.env` inside `backend/`:
-```env
-DATABASE_URL="postgresql://username:password@localhost:5432/db_name"
-JWT_SECRET="your_jwt_secret"
-PORT=5000
-FRONTEND_URL=http://localhost:3000
-```
-The frontend needs a `.env` inside `frontend/`:
-```env
-NEXT_PUBLIC_API_URL="http://localhost:5000"
-```
+1. Create your database and get the connection string.
+2. In the `backend/.env` file, update the `DATABASE_URL`:
+   ```env
+   DATABASE_URL="postgresql://username:password@your-db-host:5432/your_database"
+   ```
+3. Push the Prisma schema to create tables:
+   ```bash
+   cd backend
+   npx prisma db push
+   npx prisma generate
+   ```
 
-### 1. Backend Setup
+### 2. How to Run the Website (Backend & Frontend)
 
+To run the application locally, you need to start **both** the backend API and the frontend Next.js server in separate terminal windows.
+
+**Terminal 1 (Start Backend):**
 ```bash
 cd backend
 npm install
-npm run setup  # push schema + generate client + seed data
 npm run dev
 ```
+*(The backend API will run on http://localhost:5000)*
 
-### 2. Frontend Setup
-
+**Terminal 2 (Start Frontend):**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+*(The website will run on http://localhost:3000)*
+
+---
+
+### 3. How to Change Admin User/Email and Password
+
+The initial admin user is created using a backend script. If you want to change the admin login details (Email or Password):
+
+1. Open the file `backend/create-admin.ts` in your code editor.
+2. Modify lines 7 and 8 to your desired credentials:
+   ```typescript
+   const email = 'your_new_admin@gmail.com';
+   const password = 'your_new_password';
+   ```
+3. Run the script in the backend directory:
+   ```bash
+   cd backend
+   npx ts-node create-admin.ts
+   ```
+   *(This will safely hash the new password and update the database with SUPER_ADMIN privileges).*
+
+### 4. How to See the Users (Customers)
+
+There are two ways to view all registered users and customers:
+
+**Method 1: Via the Admin Panel (Recommended)**
+1. Log in to the website using your Admin credentials at `http://localhost:3000/login`.
+2. Navigate to the **Admin Dashboard**.
+3. Click on **Customers** (`/admin/customers`) in the sidebar.
+4. Here you can view, search, and manage all users, their order histories, and assign discounts.
+
+**Method 2: Via Database (Prisma Studio)**
+If you want direct database access to view the `User` table:
+```bash
+cd backend
+npx prisma studio
+```
+*(This opens a clean UI at http://localhost:5555 where you can directly view and edit the database tables).*
 
 ## 🔑 Demo Credentials
 
