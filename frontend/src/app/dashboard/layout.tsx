@@ -95,9 +95,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 flex flex-col min-h-screen">
         <header className="bg-white border-b border-gray-200 p-4 md:px-8 md:py-6 flex justify-between items-center sticky top-0 z-10">
           <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center font-bold">
-              {user.name.charAt(0).toUpperCase()}
+          <div className="flex items-center gap-6">
+            <Link href="/" className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
+              <i className="fa-solid fa-house"></i> Back to Website
+            </Link>
+            <div className="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+              <div className="w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center font-bold text-sm">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-semibold text-gray-700 pr-2 hidden sm:block">{user.name}</span>
             </div>
           </div>
         </header>
