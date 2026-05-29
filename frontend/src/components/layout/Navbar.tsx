@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useCart } from "../../context/CartContext";
 import { isPanelRole } from "@/lib/auth";
 import { buildApiUrl } from "@/lib/api";
-import { ThemeToggle } from "../ui/ThemeToggle";
+
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -136,9 +136,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </Link>
-                
-                {/* Theme Toggle */}
-                <ThemeToggle />
+
 
                 {/* Auth State */}
                 {user ? (
@@ -220,8 +218,6 @@ export default function Navbar() {
                   )}
                 </Link>
 
-                {/* Theme Toggle Mobile */}
-                <ThemeToggle />
 
                 {/* Hamburger */}
                 <button
