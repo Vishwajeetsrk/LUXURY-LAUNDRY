@@ -49,7 +49,7 @@ router.get("/", authenticate, async (req: AuthRequest, res: Response): Promise<v
 // POST /api/orders — create a new order
 router.post("/", authenticate, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { serviceId, quantity, address, notes, pickupDate, customerId, paymentMethod, deliveryInstructions, deliveryCharge, useWallet } = req.body;
+    const { serviceId, quantity, address, notes, pickupDate, customerId, paymentMethod, deliveryInstructions, deliveryCharge, useWallet, offerCode } = req.body;
     if (!serviceId || !quantity || !address) {
       res.status(400).json({ message: "serviceId, quantity, and address are required" });
       return;
@@ -59,7 +59,26 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response): Promise<
       res.status(404).json({ message: "Service not found" });
       return;
     }
-    const totalAmount = service.pricePerUnit * quantity;
+    let totalAmount = service.pricePerUnit * quantity;
+    let discountAmount = 0;
+    
+    if (offerCode) {
+      const offer = await prisma.offer.findUnique({ where: { code: offerCode.toUpperCase() } });
+      if (offer && offer.isActive && totalAmount >= offer.minOrderValue) {
+        if (!offer.usageLimit || offer.usageCount < offer.usageLimit) {
+          if (offer.discountType === "PERCENTAGE") {
+            const calculated = totalAmount * (offer.discountValue / 100);
+            discountAmount = offer.maxDiscount ? Math.min(calculated, offer.maxDiscount) : calculated;
+          } else {
+            discountAmount = offer.discountValue;
+          }
+          // Increment usage
+          await prisma.offer.update({ where: { id: offer.id }, data: { usageCount: { increment: 1 } } });
+        }
+      }
+    }
+    
+    totalAmount -= discountAmount;
     const orderCustomerId =
       hasPermission(req.user!.role, "orders:write") && customerId ? customerId : req.user!.id;
     
@@ -81,7 +100,13 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response): Promise<
         service: { select: { name: true, unit: true } },
       },
     });
-    const invoice = await createInvoiceFromOrder(order.id, { paymentMethod: paymentMethod || "CASH", paymentStatus: "UNPAID", deliveryCharge: Number(deliveryCharge) || 0, useWallet: !!useWallet });
+    const invoice = await createInvoiceFromOrder(order.id, { 
+      paymentMethod: paymentMethod || "CASH", 
+      paymentStatus: "UNPAID", 
+      deliveryCharge: Number(deliveryCharge) || 0, 
+      useWallet: !!useWallet,
+      discountAmount: discountAmount > 0 ? discountAmount : undefined
+    });
     const adminPhone = process.env.ADMIN_WHATSAPP_PHONE || "+919663574728";
     const orderSummary = {
       id: order.id.slice(0, 8).toUpperCase(),

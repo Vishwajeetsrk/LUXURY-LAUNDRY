@@ -26,8 +26,10 @@ import walletRoutes from "./routes/wallet";
 import offerRoutes from "./routes/offers";
 import settingRoutes from "./routes/settings";
 import priceListRoutes from "./routes/priceList";
-import uploadRoutes from "./routes/upload";
-import reportsRoutes from "./routes/reports";
+import { reportsRoutes } from './routes/reports';
+import { uploadRoutes } from './routes/upload';
+import { deliveryRoutes } from './routes/delivery';
+import { reviewsRoutes } from './routes/reviews';
 import logger from "./lib/logger";
 
 const app = express();
@@ -99,6 +101,8 @@ app.use("/api/settings", settingRoutes);
 app.use("/api/price-list", priceListRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/reports", reportsRoutes);
+app.use('/api/delivery', deliveryRoutes);
+app.use('/api/reviews', reviewsRoutes);
 
 // 404
 app.use((req, res) => {
