@@ -100,10 +100,10 @@ router.get("/:id/pdf", authenticate, async (req: AuthRequest, res: Response): Pr
     }
     const fs = require('fs');
     const path = require('path');
-    const logoBuffer = fs.existsSync(path.join(__dirname, '../../../../frontend/public/images/logo.png')) 
-        ? fs.readFileSync(path.join(__dirname, '../../../../frontend/public/images/logo.png')) : undefined;
-    const qrBuffer = fs.existsSync(path.join(__dirname, '../../../../frontend/public/images/qr.jpeg')) 
-        ? fs.readFileSync(path.join(__dirname, '../../../../frontend/public/images/qr.jpeg')) : undefined;
+    const logoBuffer = fs.existsSync(path.join(__dirname, '../assets/logo.png')) 
+        ? fs.readFileSync(path.join(__dirname, '../assets/logo.png')) : undefined;
+    const qrBuffer = fs.existsSync(path.join(__dirname, '../assets/qr.jpeg')) 
+        ? fs.readFileSync(path.join(__dirname, '../assets/qr.jpeg')) : undefined;
 
     const stream = await generateInvoicePdfStream(invoice, logoBuffer, qrBuffer);
     res.setHeader("Content-Type", "application/pdf");

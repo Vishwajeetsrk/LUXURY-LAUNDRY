@@ -124,12 +124,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="h-16 flex items-center gap-2 px-5 border-b border-gray-100 flex-shrink-0">
-          <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-            <i className="fa-solid fa-shirt text-white text-sm" />
-          </div>
-          <span className="text-base font-black text-gray-900">
-            LUXURY <span className="text-primary-500">LAUNDRY.</span>
-          </span>
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="h-10 object-contain" />
+          </Link>
           <button className="ml-auto lg:hidden p-1" onClick={() => setSidebarOpen(false)}>
             <i className="fa-solid fa-xmark text-gray-400" />
           </button>
