@@ -12,15 +12,93 @@ const packageStyles = [
   { color: "border-purple-300", btnClass: "border-2 border-purple-500 text-purple-600 hover:bg-purple-50" },
 ];
 
-const additionalPricing = [
-  { service: "Trouser/Jeans (Dry Clean)", price: "₹100" },
-  { service: "Shirt/T-Shirt (Dry Clean / Steam Iron)", price: "₹100 / ₹20" },
-  { service: "Kurta/Pyjama (Dry Clean / Steam Iron)", price: "₹120+ / ₹30+" },
-  { service: "Saree/Blouse (Dry Clean / Steam Iron)", price: "₹275+ / ₹70+" },
-  { service: "Lehenga (Dry Clean / Steam Iron)", price: "₹550+ / ₹130+" },
-  { service: "Sports / Canvas / Sneaker", price: "₹350" },
-  { service: "Leather Shoes", price: "₹450" },
-  { service: "Carpet", price: "₹45 / sq.ft" },
+const priceCategories = [
+  {
+    title: "MEN'S WEAR",
+    icon: "fa-solid fa-shirt",
+    items: [
+      { name: "Shirt/T-Shirt", dryClean: "200/200", steamIron: "20/20" },
+      { name: "Trouser/Jeans", dryClean: "200/210", steamIron: "20/30" },
+      { name: "Coat", dryClean: "350", steamIron: "60" },
+      { name: "Mens Suit 2/3 pcs", dryClean: "450/550", steamIron: "80/100" },
+      { name: "Kurta/Pyjama", dryClean: "220+/200+", steamIron: "30+/20+" },
+      { name: "Achkan", dryClean: "600", steamIron: "120" },
+    ]
+  },
+  {
+    title: "WOMEN’S WEAR",
+    subtitle: "(Delivery within 3 days)",
+    icon: "fa-solid fa-person-dress",
+    items: [
+      { name: "Kurta", dryClean: "220+", steamIron: "30+" },
+      { name: "Salwar/Plazo", dryClean: "200/200+", steamIron: "20/20+" },
+      { name: "Dupatta", dryClean: "170+", steamIron: "20+" },
+      { name: "Saree/Blouse", dryClean: "375+/210+", steamIron: "70+/30+" },
+      { name: "Dress", dryClean: "400+", steamIron: "70+" },
+      { name: "Top", dryClean: "220+", steamIron: "30+" },
+      { name: "Lehenga", dryClean: "650+", steamIron: "130+" },
+      { name: "Skirt", dryClean: "310+", steamIron: "50+" },
+    ]
+  },
+  {
+    title: "WOOLEN",
+    subtitle: "(Delivery within 3 days)",
+    icon: "fa-solid fa-mitten",
+    items: [
+      { name: "Jacket F/H Sleeves", dryClean: "375+/310", steamIron: "70+/50" },
+      { name: "Sweater F/H Sleeves", dryClean: "280+/240", steamIron: "40+/30" },
+      { name: "Sweat Shirt", dryClean: "330", steamIron: "60" },
+      { name: "Long Coat", dryClean: "480", steamIron: "90" },
+      { name: "Shawl/Pashmina", dryClean: "280+/610", steamIron: "40+/120" },
+      { name: "Leather Jacket", dryClean: "600", steamIron: "120" },
+    ]
+  },
+  {
+    title: "HOUSEHOLD ITEMS",
+    icon: "fa-solid fa-house",
+    items: [
+      { name: "Blanket Single 1/2 Ply", dryClean: "450/540", steamIron: null },
+      { name: "Blanket Double 1/2 Ply", dryClean: "550/660", steamIron: null },
+      { name: "Quilt Single/Double", dryClean: "450/550", steamIron: null },
+      { name: "Duvet", dryClean: "180+", steamIron: null },
+      { name: "Curtain Door/Window (Without Lining)", dryClean: "265+", steamIron: null },
+      { name: "Curtain Door/Window (With Lining)", dryClean: "390+", steamIron: null },
+      { name: "Bed Sheet Single/Double", dryClean: "220/300", steamIron: null },
+      { name: "Carpet", dryClean: "145/Sq Ft", steamIron: null },
+      { name: "Blind", dryClean: "320+", steamIron: null },
+    ]
+  },
+  {
+    title: "SHOES",
+    icon: "fa-solid fa-shoe-prints",
+    items: [
+      { name: "Sports", dryClean: "450", steamIron: null },
+      { name: "Canvas/Sneaker (Non Leather)", dryClean: "450", steamIron: null },
+      { name: "Leather", dryClean: "550", steamIron: null },
+      { name: "Suede Leather", dryClean: "650", steamIron: null },
+      { name: "Boots", dryClean: "740+", steamIron: null },
+    ]
+  },
+  {
+    title: "BAGS",
+    icon: "fa-solid fa-bag-shopping",
+    items: [
+      { name: "Handbag", dryClean: "600+", steamIron: null },
+      { name: "Canvass/Jute/Cloth", dryClean: "450+", steamIron: null },
+      { name: "Handbag Leather", dryClean: "850+", steamIron: null },
+      { name: "Suit Case", dryClean: "350+", steamIron: null },
+      { name: "Wallet", dryClean: "350+", steamIron: null },
+    ]
+  },
+  {
+    title: "LAUNDRY",
+    icon: "fa-solid fa-jug-detergent",
+    items: [
+      { name: "5 Garments Approx /Kg", dryClean: "—", steamIron: null },
+      { name: "Wash & Steam Iron", price: "135/Kg", steamIron: null },
+      { name: "Wash & Fold", price: "85/Kg", steamIron: null },
+    ]
+  }
 ];
 
 export default function PricingPage() {
@@ -216,26 +294,62 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Additional Pricing */}
+      {/* Detailed Price List */}
       <section className="py-14 bg-gray-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl font-black text-gray-900 mb-8 text-center">
-            Additional Services Pricing
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <h2 className="text-3xl font-black text-gray-900 mb-4 text-center">
+            Updated Price List
           </h2>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            {additionalPricing.map((item, i) => (
-              <div
-                key={i}
-                className={`flex items-center justify-between px-6 py-4 ${
-                  i !== additionalPricing.length - 1 ? "border-b border-gray-100" : ""
-                }`}
-              >
-                <span className="text-gray-700 font-medium text-sm">
-                  {item.service}
-                </span>
-                <span className="text-primary-600 font-bold text-sm">
-                  {item.price}
-                </span>
+          <p className="text-gray-600 text-center mb-12">Comprehensive pricing for all your garment needs</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {priceCategories.map((category, idx) => (
+              <div key={idx} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                <div className="bg-gray-800 text-white p-4 flex items-center gap-3">
+                  <i className={`${category.icon} text-xl text-primary-400`}></i>
+                  <div>
+                    <h3 className="font-bold text-lg leading-tight">{category.title}</h3>
+                    {category.subtitle && <p className="text-xs text-gray-300">{category.subtitle}</p>}
+                  </div>
+                </div>
+                <div className="overflow-x-auto flex-1">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="bg-gray-50 border-b border-gray-100 text-gray-500">
+                        <th className="py-3 px-4 font-semibold uppercase tracking-wider">Item</th>
+                        {category.title === "LAUNDRY" ? (
+                           <th className="py-3 px-4 font-semibold uppercase tracking-wider text-right">Price</th>
+                        ) : (
+                           <>
+                             <th className="py-3 px-4 font-semibold uppercase tracking-wider text-center">Dry Clean</th>
+                             {category.items.some(i => i.steamIron !== null) && (
+                               <th className="py-3 px-4 font-semibold uppercase tracking-wider text-center">Steam Iron</th>
+                             )}
+                           </>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {category.items.map((item: any, i) => (
+                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                          <td className="py-3 px-4 text-gray-800 font-medium">{item.name}</td>
+                          {category.title === "LAUNDRY" ? (
+                            <td className="py-3 px-4 text-right text-gray-600 font-semibold">{item.price || item.dryClean}</td>
+                          ) : (
+                            <>
+                              <td className="py-3 px-4 text-center text-primary-700 font-semibold">{item.dryClean !== "—" ? `₹${item.dryClean}` : "—"}</td>
+                              {category.items.some((itm: any) => itm.steamIron !== null) && (
+                                <td className="py-3 px-4 text-center text-gray-600 font-medium">
+                                  {item.steamIron ? `₹${item.steamIron}` : "—"}
+                                </td>
+                              )}
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ))}
           </div>
