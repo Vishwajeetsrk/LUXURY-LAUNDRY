@@ -200,7 +200,7 @@ export default function PricingPage() {
 
                   {/* Features */}
                   <ul className="space-y-3 mb-8 flex-1">
-                    {plan.features.map((feat: string, idx: number) => (
+                    {(Array.isArray(plan.features) ? plan.features : typeof plan.features === 'string' ? JSON.parse(plan.features || '[]') : []).map((feat: string, idx: number) => (
                       <li
                         key={idx}
                         className="flex items-start gap-2.5 text-sm text-gray-700 font-medium"
