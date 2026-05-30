@@ -141,7 +141,7 @@ If you want direct database access to view the `User` table:
 ```bash
 cd backend
 *(This opens a clean UI at http://localhost:5555 where you can directly view and edit the database tables).*
-
+```
 ---
 
 ### 5. Deployment Links & Live Environments
