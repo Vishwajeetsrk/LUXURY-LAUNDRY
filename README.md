@@ -1,194 +1,263 @@
-# 🧺 LUXURY LAUNDRY (Jaipur) — Full-Stack Application
+# LUXURY LAUNDRY (Jaipur) — Full-Stack Application
 
-A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) built with Next.js 16, Express, Prisma, and PostgreSQL.
+A modern, full-stack web application for **Luxury Laundry Jaipur** (LuxWash) built with Next.js, Express, Prisma, and PostgreSQL.
 
-## 🏗️ Tech Stack
+## Tech Stack
 
-| Layer     | Technology                              |
-|-----------|----------------------------------------|
-| Frontend  | Next.js 16.2 (Turbopack), TypeScript, Tailwind CSS |
-| Backend   | Express 5, TypeScript, Prisma 7        |
-| Database  | PostgreSQL (via Prisma)                |
-| Auth      | JWT + bcrypt                           |
+| Layer     | Technology                                          |
+|-----------|----------------------------------------------------|
+| Frontend  | Next.js 16 (Turbopack), TypeScript, Tailwind CSS   |
+| Backend   | Express 5, TypeScript, Prisma 7, Socket.io          |
+| Database  | PostgreSQL (via Prisma)                             |
+| Auth      | JWT + bcrypt                                        |
+| Hosting   | Vercel (frontend), Render (backend + database)      |
 
-## ✨ Comprehensive Feature List
+## Features
 
-### 🛍️ User Features & User Dashboard (`/dashboard`)
-- **Authentication:** Secure Registration & Login with JWT.
-- **Profile Management:** Users can update their contact details and view their active subscription plans.
-- **Order Placement:** Users can book laundry services with specific pickup/delivery instructions.
-- **Order History (`/dashboard/orders`):** Track current order statuses (Pending, Processing, Delivered, etc.).
-- **Invoice Tracking (`/dashboard/invoices`):** View, download, and track payment status for past and current invoices.
-- **Shop & Cart (`/shop`):** Browse service packages, view AI-matched luxury product images, add items to cart, and checkout seamlessly.
-- **Coupon System:** Apply dynamic promotional codes and automatically calculate discounts before checkout.
-- **Subscriptions & Packages:** Request monthly/yearly laundry subscription plans or buy prepaid packages to get wallet credits.
-- **Wallet System & Welcome Bonus:** New users can receive an automated welcome bonus, and users can pay for orders via their wallet balance.
-- **Customer Reviews (`/dashboard/orders`):** Customers can leave a 1-5 star review and written feedback on any order marked as "DELIVERED".
+### Customer Features (`/dashboard`)
+- Secure registration and login with JWT
+- Profile management
+- Order placement with pickup/delivery instructions
+- Order history and tracking (`/dashboard/orders`)
+- Invoice viewing and PDF download (`/dashboard/invoices`)
+- Shop service packages (`/shop`) with cart and checkout
+- Coupon system with dynamic discounts
+- Subscription plans and prepaid packages
+- Wallet system with welcome bonus
+- Customer reviews on delivered orders
 
-### 🛡️ Admin Dashboard (`/admin`)
-- **Real-Time Analytics:** Live dashboard with WebSocket (Socket.io) integration for real-time order updates and percentage growth trends (Orders, Revenue, Customers).
-- **Order Management (`/admin/orders`):** View all customer orders, filter by status, update states, and assign delivery dates.
-- **Invoice Management (`/admin/invoices`):** 
-  - Automatically or manually generate invoices linked to orders.
-  - Detailed tax breakdowns (CGST/SGST applied).
-  - Track payment status (Paid, Unpaid, Overdue).
-  - Auto-generated sequential invoice numbers.
-- **Customer Management (`/admin/customers`):** View registered users, track their order history, and update their details/discounts.
-- **Service & Product Catalog (`/admin/services`):** Add, edit, disable, or delete laundry services. Now supports setting custom **Image URLs** and **Original Prices** to manually override dynamic discounts.
-- **Content Management System (`/admin/content`):** Dynamically edit website text, banners, and descriptions without touching code.
-- **Reviews Moderation (`/admin/reviews`):** Review customer feedback, delete spam, and securely toggle a review's `Published` status on or off to push it to the public homepage.
-- **WhatsApp Integration (`/admin/whatsapp`):** View logs of automated WhatsApp messages (order updates, invoice links) sent to customers via UltraMsg.
-- **Inquiries (`/admin/contacts`):** View and respond to customer queries from the Contact Us form.
-- **Packages Management (`/admin/packages`):** Create and manage subscription packages with automated wallet credit logic and discounts.
-- **Offers & Promotions (`/admin/offers`):** Generate and manage custom discount codes, tracking usage limits and conditions.
-- **Site Settings & Welcome Bonus (`/admin/settings`):** Global configurations like company phone, email, social links, and auto-assignable Welcome Bonus wallet credits.
-- **Premium UI/UX (Luxury Theme):** The entire application features a premium "Luxury Gold & Royal Navy" theme with glassmorphism effects (`backdrop-filter`), hover glow effects, and fintech-level data tables.
+### Admin Dashboard (`/admin`)
+- Real-time analytics with WebSocket (Socket.io)
+- Order management with status updates and delivery assignment
+- Invoice management with tax breakdowns (CGST/SGST)
+- Customer management with order history
+- Service and product catalog management
+- Content management system (CMS)
+- Reviews moderation with publish toggle
+- WhatsApp message logs
+- Contact inquiry management
+- Subscription package management
+- Offers and promotions with discount codes
+- Site settings and welcome bonus configuration
 
-## 📁 Project Structure
+### Public Pages
+- Home with hero, features, services, testimonials, trust badges
+- Services catalog (`/our-services`)
+- Pricing with packages and price list (`/pricing`)
+- Shop (`/shop`) with product browsing and cart
+- About Us (`/about-us`)
+- Contact Us (`/contactus`)
+- Help & FAQ (`/help`)
+- Privacy Policy (`/privacy`)
+- Terms of Service (`/terms`)
+
+## Project Structure
 
 ```
-LAUNDRYYY/
-├── frontend/          # Next.js frontend
+jaipur_laundryy-master/
+├── frontend/                  # Next.js frontend
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── (public)/     # Public pages (Home, Services, Pricing, etc.)
+│   │   │   ├── (public)/     # Public pages
 │   │   │   ├── admin/        # Admin dashboard
 │   │   │   ├── dashboard/    # User dashboard
 │   │   │   ├── login/        # Login page
 │   │   │   └── register/     # Register page
-│   │   └── components/       # Reusable components
-│   └── public/images/        # Image assets
-├── backend/           # Express API backend
+│   │   ├── components/       # Reusable components
+│   │   │   ├── home/         # Homepage sections
+│   │   │   ├── layout/       # Navbar, Footer
+│   │   │   ├── seo/          # Structured data
+│   │   │   └── ui/           # Shared UI components
+│   │   ├── context/          # React contexts (Cart, Content)
+│   │   └── lib/              # Utilities, API helpers
+│   └── public/images/        # Static assets
+├── backend/                   # Express API backend
 │   ├── src/
-│   │   ├── routes/           # API routes (auth, orders, services, invoices)
-│   │   ├── middleware/       # JWT auth middleware
-│   │   └── lib/              # Prisma client
+│   │   ├── routes/           # API routes
+│   │   ├── middleware/       # JWT auth, validation
+│   │   ├── lib/              # Prisma client, JWT, permissions
+│   │   ├── services/         # Business logic (invoices, notifications)
+│   │   └── pdf/              # PDF generation
 │   ├── prisma/
-│   │   ├── schema.prisma     # PostgreSQL schema
-│   │   └── seed.ts           # Seed data
-│   └── generated/            # Prisma generated client
+│   │   ├── schema.prisma     # Database schema
+│   │   ├── seed.ts           # Seed data
+│   │   └── prisma.config.ts  # Prisma v7 config
+│   └── render.yaml           # Render deployment config
+├── render.yaml                # Render Blueprint (IaC)
 └── README.md
 ```
 
-## 🚀 Operations & Setup Guide (How to Run Everything)
+## Quick Start (Local Development)
 
-### 1. Database Setup (PostgreSQL)
-The application uses PostgreSQL as its database. You can either use a local Postgres installation or a cloud provider like [Supabase](https://supabase.com/).
+### Prerequisites
+- Node.js 18+
+- PostgreSQL database (local or cloud)
 
-1. Create your database and get the connection string.
-2. In the `backend/.env` file, update the `DATABASE_URL`:
-   ```env
-   DATABASE_URL="postgresql://username:password@your-db-host:5432/your_database"
-   ```
-3. Push the Prisma schema to create tables:
-   ```bash
-   cd backend
-   npx prisma db push
-   npx prisma generate
-   ```
+### 1. Database Setup
 
-### 2. How to Run the Website (Backend & Frontend)
+Create a PostgreSQL database and update `backend/.env`:
 
-To run the application locally, you need to start **both** the backend API and the frontend Next.js server in separate terminal windows.
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/your_database"
+JWT_SECRET=your-secret-key-here
+NODE_ENV=development
+```
 
-**Terminal 1 (Start Backend):**
+Push the schema:
 ```bash
 cd backend
-npm install
-npm run dev
+npx prisma db push
+npx prisma generate
 ```
-*(The backend API will run on http://localhost:5000)*
 
-**Terminal 2 (Start Frontend):**
+### 2. Seed the Database
+
+```bash
+cd backend
+npm run seed
+```
+
+### 3. Start the Servers
+
+**Backend (Terminal 1):**
+```bash
+cd backend
+npm run dev
+# Runs on http://localhost:5000
+```
+
+**Frontend (Terminal 2):**
 ```bash
 cd frontend
-npm install
 npm run dev
+# Runs on http://localhost:3000
 ```
-*(The website will run on http://localhost:3000)*
 
----
+## Deployment
 
-### 3. How to Change Admin User/Email and Password
-
-The initial admin user is created using a backend script. If you want to change the admin login details (Email or Password):
-
-1. Open the file `backend/create-admin.ts` in your code editor.
-2. Modify lines 7 and 8 to your desired credentials:
-   ```typescript
-   const email = 'your_new_admin@gmail.com';
-   const password = 'your_new_password';
+### Frontend (Vercel)
+1. Connect your GitHub repo to Vercel
+2. Set the root directory to `frontend`
+3. Add environment variable:
    ```
-3. Run the script in the backend directory:
-   ```bash
-   cd backend
-   npx ts-node create-admin.ts
+   NEXT_PUBLIC_API_URL=https://luxury-laundry.onrender.com
    ```
-   *(This will safely hash the new password and update the database with SUPER_ADMIN privileges).*
+4. Deploy
 
-### 4. How to See the Users (Customers)
+### Backend (Render)
+1. Connect your GitHub repo to Render
+2. Use the `render.yaml` blueprint or create a new Web Service
+3. Set environment variables:
+   ```
+   DATABASE_URL=your_render_postgres_url
+   JWT_SECRET=your_secret_key
+   NODE_ENV=production
+   ```
+4. Deploy — Render runs `prisma db push && npm run start` automatically
 
-There are two ways to view all registered users and customers:
+### Database (Render PostgreSQL)
+1. Create a PostgreSQL database in Render
+2. Copy the internal connection string to `DATABASE_URL`
 
-**Method 1: Via the Admin Panel (Recommended)**
-1. Log in to the website using your Admin credentials at `http://localhost:3000/login`.
-2. Navigate to the **Admin Dashboard**.
-3. Click on **Customers** (`/admin/customers`) in the sidebar.
-4. Here you can view, search, and manage all users, their order histories, and assign discounts.
+## Environment Variables
 
-**Method 2: Via Database (Prisma Studio)**
-If you want direct database access to view the `User` table:
+### Backend (`backend/.env`)
+```env
+DATABASE_URL=postgresql://...        # Required
+JWT_SECRET=your-secret-key           # Required (auto-generated if missing)
+NODE_ENV=production                  # Set on Render
+ADMIN_WHATSAPP_PHONE=+91XXXXXXXXXX  # Optional: WhatsApp integration
+ADMIN_PHONE_NUMBER=XXXXXXXXXX       # Optional: fallback phone
+```
+
+### Frontend (`frontend/.env.local`)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000  # Backend API URL
+```
+
+## Demo Credentials
+
+> **Important:** Change these before deploying to production.
+
+| Role        | Email                   | Password       | Access                                  |
+|-------------|-------------------------|----------------|-----------------------------------------|
+| Admin       | admin@luxwash.com       | Admin@12345    | Full system control                     |
+| Super Admin | superadmin@luxwash.com  | SuperAdmin@123 | Full system control                     |
+| Staff       | staff@luxwash.com       | Staff@12345    | Manage orders, services, customers      |
+| Delivery    | delivery@luxwash.com    | Delivery@123   | View assigned orders, update delivery   |
+| Customer    | rahul@example.com       | Customer@123   | Book orders, leave reviews              |
+
+### Changing Admin Credentials
+
+Edit `backend/create-admin.ts` and run:
 ```bash
 cd backend
-*(This opens a clean UI at http://localhost:5555 where you can directly view and edit the database tables).*
+npx ts-node create-admin.ts
 ```
----
 
-### 5. Deployment Links & Live Environments
+Or update via the seed script:
+```bash
+cd backend
+npm run seed
+```
 
-The application is fully configured for continuous deployment using modern cloud providers.
+## API Endpoints
 
-1. **Frontend (Vercel):** [https://luxurylaundry.vercel.app](https://luxurylaundry.vercel.app)
-   - *Pulls from GitHub `main` branch.*
-   - *Environment variables securely stored in Vercel settings.*
-2. **Backend API (Render):** [https://luxury-laundry.onrender.com](https://luxury-laundry.onrender.com)
-   - *Deployed via `render.yaml` infrastructure-as-code.*
-3. **Database (Supabase):** Managed PostgreSQL via Supabase connection strings.
+### Auth
+- `POST /api/auth/register` — Create account
+- `POST /api/auth/login` — Sign in
+- `POST /api/auth/logout` — Sign out
 
-## 🔑 Demo Credentials
+### Orders
+- `GET /api/orders` — List orders
+- `POST /api/orders` — Create order
+- `PATCH /api/orders/:id` — Update order status
 
-| Role     | Email                   | Password       | Access Level |
-|----------|-------------------------|----------------|--------------|
-| Admin    | admin@luxwash.com       | Admin@12345    | Full system control, analytics, financial settings |
-| Super Admin | superadmin@luxwash.com | SuperAdmin@123 | Full system control |
-| Staff    | staff@luxwash.com       | Staff@12345    | Can manage orders, services, and customers |
-| Delivery | delivery@luxwash.com    | Delivery@123   | Can view assigned orders and update delivery status |
-| Customer | rahul@example.com       | Customer@123   | Standard user, can book orders and leave reviews |
+### Services
+- `GET /api/services` — List services
+- `POST /api/services` — Create service (admin)
+- `PUT /api/services/:id` — Update service (admin)
+- `DELETE /api/services/:id` — Delete service (admin)
 
-**Note on Role-Based Access Control (RBAC):**
-The backend enforces strict permissions via the `backend/src/middleware/auth.ts` middleware. 
-- The `panelAccess` logic ensures only `SUPER_ADMIN`, `ADMIN`, `STAFF`, and `DELIVERY` roles can access the `/admin` routes.
-- The `requirePermission` logic ensures that only high-level admins can modify financial settings, change business data, or delete users.
-- The `adminOnly` logic completely shields sensitive API endpoints (like generating API keys or WhatsApp setup) from basic Staff and Delivery users.
+### Invoices
+- `GET /api/invoices` — List invoices
+- `GET /api/invoices/customer/me` — Current user's invoices
+- `GET /api/invoices/:id` — Invoice details
+- `POST /api/invoices/:id/pdf` — Download PDF
 
-## 📊 Database Schema Highlights
+### Reviews
+- `GET /api/reviews` — List published reviews
+- `POST /api/reviews` — Submit review
 
-- **User** — Customers, Staff, Delivery, Admins
-- **Order** — Customer orders for specific laundry services
-- **Service** & **ShopProduct** — Available offerings (with `imageUrl`, `originalPrice`, `rating`, `reviewCount` fields)
-- **Review** — Customer 1-5 star ratings and comments, moderated by admin with `isPublished` flag
-- **Invoice** & **InvoiceItem** — Advanced billing system with tax breakdowns (CGST/SGST)
-- **WhatsAppLog** — Tracking external WhatsApp communications
-- **AuditLog** — Tracking admin actions
-- **SubscriptionRequest** & **Package** — Tracking user subscription plans and prepaid packages
-- **WalletTransaction** — Financial ledger tracking customer wallet balance operations
-- **Offer** — Promotional campaigns and discount rules engine
+### Wallet
+- `GET /api/wallet/me` — Current user's wallet
+- `POST /api/wallet/add` — Add funds
 
-## 📞 Business Information
+### Packages
+- `GET /api/packages` — List packages
+- `POST /api/packages` — Create package (admin)
 
-- **Name**: LUXURY LAUNDRY / LuxWash Premium Laundry
-- **Website**: https://luxurylaundryjaipur.com
-- **Address**: Shop No. 504, Bagrota, Ajmer Road, Jaipur, Rajasthan
-- **Phone**: +91-9663574728
-- **Email**: support@luxwash.com
-- **Hours**: Open All Week: 10:00 AM – 8:00 PM
+### Content & Settings
+- `GET /api/content` — Get site content
+- `PUT /api/content` — Update content (admin)
+- `GET /api/settings` — Get site settings
+- `PUT /api/settings` — Update settings (admin)
+
+### Contacts
+- `POST /api/contacts` — Submit contact form
+- `GET /api/contacts` — List inquiries (admin)
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| `500 error on login` | Ensure `JWT_SECRET` is set, or check backend logs |
+| `Cannot connect to backend` | Verify `NEXT_PUBLIC_API_URL` points to running backend |
+| `Prisma error: table does not exist` | Run `npx prisma db push` in backend directory |
+| `Token expired` | JWT tokens expire after 7 days; log in again |
+| `Render cold start (~50s)` | Free tier instances spin down with inactivity |
+| `Database connection refused` | Ensure `DATABASE_URL` uses `?sslmode=require` for Render |
+
+## License
+
+Private — All rights reserved.
