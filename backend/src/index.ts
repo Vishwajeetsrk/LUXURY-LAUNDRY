@@ -78,8 +78,41 @@ app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Health check
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", message: "LuxWash API is running", timestamp: new Date().toISOString() });
+app.get("/api/health", async (req, res) => {
+  const health: any = {
+    status: "ok",
+    message: "LuxWash API is running",
+    timestamp: new Date().toISOString(),
+    env: {
+      database: process.env.DATABASE_URL ? "configured" : "MISSING",
+      jwtSecret: process.env.JWT_SECRET ? "set" : "auto-generated",
+      nodeEnv: process.env.NODE_ENV || "development",
+    },
+  };
+
+  // Test database connection
+  try {
+    const { PrismaClient } = await import("@prisma/client");
+    const { Pool } = await import("pg");
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 5000,
+    });
+    const adapter = new PrismaPg(pool);
+    const testPrisma = new PrismaClient({ adapter });
+    await testPrisma.$queryRaw`SELECT 1`;
+    await testPrisma.$disconnect();
+    await pool.end();
+    health.database = "connected";
+  } catch (dbErr: any) {
+    health.database = "error";
+    health.databaseError = dbErr?.message || "Unknown database error";
+    health.status = "degraded";
+  }
+
+  res.json(health);
 });
 
 // Routes
@@ -116,9 +149,20 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 (async () => {
+  // Check critical env vars
+  if (!process.env.DATABASE_URL) {
+    console.error("FATAL: DATABASE_URL is not set. The server will not be able to connect to the database.");
+  }
+  if (!process.env.JWT_SECRET) {
+    console.warn("WARNING: JWT_SECRET is not set. Using auto-generated secret (tokens will not survive restarts).");
+  }
+
   server.listen(PORT, () => {
     console.log(`\n🧺 LuxWash API Server running on http://localhost:${PORT}`);
-    console.log(`   Health: http://localhost:${PORT}/api/health\n`);
+    console.log(`   Health: http://localhost:${PORT}/api/health`);
+    console.log(`   Database: ${process.env.DATABASE_URL ? " configured" : " NOT CONFIGURED"}`);
+    console.log(`   JWT_SECRET: ${process.env.JWT_SECRET ? " set" : " auto-generated"}`);
+    console.log(`   NODE_ENV: ${process.env.NODE_ENV || "development"}\n`);
   });
 })();
 
