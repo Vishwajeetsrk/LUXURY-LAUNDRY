@@ -135,6 +135,11 @@ npm run dev
 
 ## Deployment
 
+### Live URLs
+- **Frontend (Vercel):** https://luxurylaundryjaipur.com
+- **Backend API (Render):** https://luxury-laundry.onrender.com
+- **Database:** Render PostgreSQL (free tier, expires Aug 30 2026)
+
 ### Frontend (Vercel)
 1. Connect your GitHub repo to Vercel
 2. Set the root directory to `frontend`
@@ -147,17 +152,23 @@ npm run dev
 ### Backend (Render)
 1. Connect your GitHub repo to Render
 2. Use the `render.yaml` blueprint or create a new Web Service
-3. Set environment variables:
+3. Set environment variables in the **Environment** tab:
    ```
-   DATABASE_URL=your_render_postgres_url
-   JWT_SECRET=your_secret_key
+   DATABASE_URL=your_render_postgres_internal_url
+   JWT_SECRET=auto-generated_or_your_secret
    NODE_ENV=production
    ```
-4. Deploy — Render runs `prisma db push && npm run start` automatically
+4. Deploy — Render runs `prisma db push` then `npm run start` automatically
 
 ### Database (Render PostgreSQL)
-1. Create a PostgreSQL database in Render
-2. Copy the internal connection string to `DATABASE_URL`
+1. Create a PostgreSQL database in Render (Free tier)
+2. Copy the **Internal Database URL** to `DATABASE_URL` in your backend's Environment tab
+3. The schema is auto-pushed on each deploy via `prisma db push`
+
+### After First Deploy — Seed Users
+The database tables are created automatically, but demo users need to be seeded manually:
+1. Go to Render → your backend service → **Shell** tab
+2. Run: `npx ts-node prisma/seed.ts`
 
 ## Environment Variables
 
@@ -251,11 +262,14 @@ npm run seed
 
 | Problem | Solution |
 |---------|----------|
-| `500 error on login` | Ensure `JWT_SECRET` is set, or check backend logs |
+| `500 error on login` | Check `DATABASE_URL` is set correctly in Render Environment tab |
+| `ENOTFOUND tenant/user` | Database URL points to deleted instance — create a new Render PostgreSQL |
 | `Cannot connect to backend` | Verify `NEXT_PUBLIC_API_URL` points to running backend |
-| `Prisma error: table does not exist` | Run `npx prisma db push` in backend directory |
+| `Invalid email or password` | Run seed: Render Shell → `npx ts-node prisma/seed.ts` |
+| `Prisma error: table does not exist` | `prisma db push` runs on deploy — check Render build logs |
 | `Token expired` | JWT tokens expire after 7 days; log in again |
 | `Render cold start (~50s)` | Free tier instances spin down with inactivity |
+| `Database expires in 30 days` | Free Render PostgreSQL expires — upgrade or create new one |
 | `Database connection refused` | Ensure `DATABASE_URL` uses `?sslmode=require` for Render |
 
 ## License
