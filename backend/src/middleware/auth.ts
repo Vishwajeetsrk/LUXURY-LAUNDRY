@@ -1,15 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
+import { getJwtSecret } from "../lib/jwt";
 import { hasPermission, isPanelRole, type Permission } from "../lib/permissions";
-
-function getJwtSecret(): string {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error("JWT_SECRET environment variable is not set");
-  }
-  return secret;
-}
 
 export interface AuthRequest extends Request {
   user?: { id: string; email: string; role: string; name: string };

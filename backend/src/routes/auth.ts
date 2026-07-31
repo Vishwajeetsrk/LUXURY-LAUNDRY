@@ -2,6 +2,7 @@ import { Router, Response, Request } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
+import { getJwtSecret } from "../lib/jwt";
 import { authenticate, AuthRequest } from "../middleware/auth";
 import { z } from "zod";
 import { validate } from "../middleware/validate";
@@ -19,14 +20,6 @@ const loginSchema = z.object({
 });
 
 const router = Router();
-
-function getJwtSecret(): string {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error("JWT_SECRET environment variable is not set");
-  }
-  return secret;
-}
 
 // POST /api/auth/register
 router.post("/register", validate(registerSchema), async (req: AuthRequest, res: Response): Promise<void> => {
