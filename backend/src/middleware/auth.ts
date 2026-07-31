@@ -3,7 +3,13 @@ import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 import { hasPermission, isPanelRole, type Permission } from "../lib/permissions";
 
-const JWT_SECRET = process.env.JWT_SECRET || "luxwash-secret-key-2024";
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is not set");
+  }
+  return secret;
+}
 
 export interface AuthRequest extends Request {
   user?: { id: string; email: string; role: string; name: string };
@@ -21,7 +27,7 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
     return;
   }
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, getJwtSecret()) as { id: string };
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
       select: { id: true, email: true, role: true, name: true, deletedAt: true },

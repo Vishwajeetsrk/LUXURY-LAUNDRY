@@ -51,7 +51,7 @@ export default function CustomerInvoicesPage() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-mono text-xs text-gray-500">{invoice.invoiceNumber}</p>
-                  <h2 className="text-xl font-black text-gray-900 mt-1">{currency(invoice.totalAmount)}</h2>
+                  <p className="text-xl font-black text-gray-900 mt-1">{currency(invoice.totalAmount)}</p>
                 </div>
                 <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${statusTone[invoice.paymentStatus] || "bg-gray-100 text-gray-700"}`}>
                   {invoice.paymentStatus}
@@ -72,7 +72,7 @@ export default function CustomerInvoicesPage() {
               <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i className="fa-solid fa-file-invoice text-primary-500 text-2xl" />
               </div>
-              <h2 className="text-xl font-black text-gray-900">No invoices yet</h2>
+              <p className="text-xl font-black text-gray-900">No invoices yet</p>
               <p className="text-gray-500 text-sm mt-2">Your invoices will appear here after you place an order.</p>
               <Link href="/shop" className="btn btn-primary mt-6">Browse Services</Link>
             </div>

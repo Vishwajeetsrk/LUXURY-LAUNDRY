@@ -157,13 +157,13 @@ The application is fully configured for continuous deployment using modern cloud
 
 ## 🔑 Demo Credentials
 
-| Role     | Email                   | Password | Access Level |
-|----------|-------------------------|----------|--------------|
-| Admin    | vishwajeetsrk@gmail.com | 12345678 | Full system control, analytics, financial settings |
-| Admin    | admin@luxwash.com       | password123 | Full system control |
-| Staff    | staff@luxwash.com       | password123 | Can manage orders, services, and customers |
-| Delivery | delivery@luxwash.com    | password123 | Can view assigned orders and update delivery status |
-| Customer | customer@luxwash.com    | password123 | Standard user, can book orders and leave reviews |
+| Role     | Email                   | Password       | Access Level |
+|----------|-------------------------|----------------|--------------|
+| Admin    | admin@luxwash.com       | Admin@12345    | Full system control, analytics, financial settings |
+| Super Admin | superadmin@luxwash.com | SuperAdmin@123 | Full system control |
+| Staff    | staff@luxwash.com       | Staff@12345    | Can manage orders, services, and customers |
+| Delivery | delivery@luxwash.com    | Delivery@123   | Can view assigned orders and update delivery status |
+| Customer | rahul@example.com       | Customer@123   | Standard user, can book orders and leave reviews |
 
 **Note on Role-Based Access Control (RBAC):**
 The backend enforces strict permissions via the `backend/src/middleware/auth.ts` middleware. 

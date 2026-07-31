@@ -3,9 +3,11 @@ import ContactFormSection from "@/components/home/ContactFormSection";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Contact Us | LUXURY LAUNDRY",
+  title: "Contact Us",
   description:
-    "Contact LuxWash Premium Laundry for bookings, inquiries, and support. Located in Jaipur, Rajasthan.",
+    "Contact LuxWash Premium Laundry for bookings, inquiries, and support. Located on Ajmer Road, Jaipur, Rajasthan. Call +91-9663574728.",
+  keywords: ["contact laundry Jaipur", "book laundry pickup", "laundry phone number", "laundry address Jaipur"],
+  alternates: { canonical: "https://luxurylaundryjaipur.com/contactus" },
 };
 export default function ContactPage() {
   return (
@@ -83,10 +85,10 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {/* Hours */}
             <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
+              <h2 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
                 <i className="fa-solid fa-clock text-primary-500" />
                 Business Hours
-              </h3>
+              </h2>
               <div className="space-y-2">
                 {[
                   { day: "Monday – Friday", hours: "10:00 AM – 8:00 PM" },
@@ -114,10 +116,10 @@ export default function ContactPage() {
 
             {/* Address */}
             <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
+              <h2 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
                 <i className="fa-solid fa-location-dot text-primary-500" />
                 Find Us
-              </h3>
+              </h2>
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 Shop No. 504, Bagrota,
                 <br />

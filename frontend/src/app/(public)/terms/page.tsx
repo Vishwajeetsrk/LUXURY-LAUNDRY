@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | LUXURY LAUNDRY",
-  description: "Terms of Service for LuxWash Premium Laundry.",
+  title: "Terms of Service",
+  description: "Read the Terms of Service for LuxWash Premium Laundry in Jaipur. Service policies, order terms, pickup & delivery, and refund conditions.",
+  alternates: { canonical: "https://luxurylaundryjaipur.com/terms" },
 };
 
 export default function TermsOfServicePage() {

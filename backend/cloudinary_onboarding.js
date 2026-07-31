@@ -1,10 +1,12 @@
 const cloudinary = require('cloudinary').v2;
 
 // 1. Configure Cloudinary
+// Set these environment variables before running:
+//   CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
 cloudinary.config({ 
-  cloud_name: 'dxridpoc0', 
-  api_key: '828887877621442', 
-  api_secret: 'wpuKWlLRhwmN6TTOPJ4VBdFXgCE' 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'YOUR_CLOUD_NAME', 
+  api_key: process.env.CLOUDINARY_API_KEY || 'YOUR_API_KEY', 
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'YOUR_API_SECRET' 
 });
 
 async function main() {

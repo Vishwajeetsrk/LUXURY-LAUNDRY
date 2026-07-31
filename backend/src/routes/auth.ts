@@ -19,7 +19,14 @@ const loginSchema = z.object({
 });
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || "luxwash-secret-key-2024";
+
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is not set");
+  }
+  return secret;
+}
 
 // POST /api/auth/register
 router.post("/register", validate(registerSchema), async (req: AuthRequest, res: Response): Promise<void> => {
@@ -60,7 +67,7 @@ router.post("/register", validate(registerSchema), async (req: AuthRequest, res:
       });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name }, getJwtSecret(), { expiresIn: "7d" });
     
     res.cookie("token", token, {
       httpOnly: true,
@@ -90,7 +97,7 @@ router.post("/login", validate(loginSchema), async (req: AuthRequest, res: Respo
       res.status(401).json({ message: "Invalid email or password" });
       return;
     }
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name }, getJwtSecret(), { expiresIn: "7d" });
     
     res.cookie("token", token, {
       httpOnly: true,

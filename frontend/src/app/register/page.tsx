@@ -56,7 +56,7 @@ export default function RegisterPage() {
           <Link href="/" className="inline-block">
             <Image src="/logo.png" alt="Luxury Laundry" width={300} height={100} className="mx-auto object-contain h-24" />
           </Link>
-          <h2 className="mt-6 text-2xl font-black text-gray-900">Create an account</h2>
+          <h1 className="mt-6 text-2xl font-black text-gray-900">Create an account</h1>
           <p className="mt-1 text-sm text-gray-500">Join LuxWash for premium laundry service</p>
         </div>
 

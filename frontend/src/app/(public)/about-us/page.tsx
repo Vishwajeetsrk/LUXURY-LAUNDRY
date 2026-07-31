@@ -3,9 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About Us | LUXURY LAUNDRY",
+  title: "About Us",
   description:
-    "Learn about LuxWash Premium Laundry — our story, mission, and commitment to premium fabric care in Jaipur.",
+    "Learn about LuxWash Premium Laundry — our story, mission, and commitment to premium fabric care, dry cleaning, and doorstep delivery in Jaipur, Rajasthan.",
+  keywords: ["about LuxWash", "laundry company Jaipur", "premium laundry", "dry cleaning Jaipur", "fabric care"],
+  alternates: { canonical: "https://luxurylaundryjaipur.com/about-us" },
 };
 
 const values = [

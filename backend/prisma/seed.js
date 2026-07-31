@@ -14,7 +14,7 @@ const prisma = new client_1.PrismaClient({ adapter });
 async function main() {
     console.log("🌱 Seeding database...\n");
     // 1. Create Admin User
-    const adminPassword = await bcryptjs_1.default.hash("admin123", 10);
+    const adminPassword = await bcryptjs_1.default.hash("Admin@12345", 10);
     const admin = await prisma.user.upsert({
         where: { email: "admin@luxwash.com" },
         update: {},
@@ -28,7 +28,7 @@ async function main() {
     });
     console.log("✅ Admin user created:", admin.email);
     // 2. Create Sample Customer
-    const custPassword = await bcryptjs_1.default.hash("customer123", 10);
+    const custPassword = await bcryptjs_1.default.hash("Customer@123", 10);
     const customer = await prisma.user.upsert({
         where: { email: "rahul@example.com" },
         update: {},
@@ -123,8 +123,8 @@ async function main() {
     }
     console.log(`✅ ${contactsData.length} sample contact submissions created`);
     console.log("\n🎉 Database seeded successfully!\n");
-    console.log("Admin login: admin@luxwash.com / admin123");
-    console.log("Customer login: rahul@example.com / customer123\n");
+    console.log("Admin login: admin@luxwash.com / Admin@12345");
+    console.log("Customer login: rahul@example.com / Customer@123\n");
 }
 main()
     .catch((e) => {

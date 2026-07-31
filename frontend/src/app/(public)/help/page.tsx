@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Help | LUXURY LAUNDRY",
-  description: "Frequently asked questions and customer support for LuxWash Premium Laundry.",
+  title: "Help & Support",
+  description: "Frequently asked questions about LuxWash Premium Laundry services in Jaipur — pickup scheduling, pricing, areas served, payment options, and more.",
+  keywords: ["laundry FAQ", "laundry questions Jaipur", "how to book laundry", "laundry pickup delivery FAQ"],
+  alternates: { canonical: "https://luxurylaundryjaipur.com/help" },
 };
 
 const faqs = [

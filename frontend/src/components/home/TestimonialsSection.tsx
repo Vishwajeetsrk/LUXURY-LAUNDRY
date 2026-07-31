@@ -62,7 +62,7 @@ export default function TestimonialsSection() {
                   {review.customer.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm">{review.customer.name}</h4>
+                  <p className="font-bold text-gray-900 dark:text-white text-sm">{review.customer.name}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {new Date(review.createdAt).toLocaleDateString()}
                   </p>

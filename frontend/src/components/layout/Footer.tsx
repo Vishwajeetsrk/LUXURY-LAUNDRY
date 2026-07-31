@@ -18,9 +18,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <p className="text-white font-bold text-sm uppercase tracking-wider mb-4">
               Quick Links
-            </h4>
+            </p>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
@@ -67,9 +67,9 @@ export default function Footer() {
 
           {/* Connect With Us */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <p className="text-white font-bold text-sm uppercase tracking-wider mb-4">
               Connect With Us
-            </h4>
+            </p>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <i className="fa-solid fa-location-dot text-primary-500 mt-0.5 flex-shrink-0" />

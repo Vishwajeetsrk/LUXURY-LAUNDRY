@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | LUXURY LAUNDRY",
-  description: "Privacy Policy for LuxWash Premium Laundry services.",
+  title: "Privacy Policy",
+  description: "Read the Privacy Policy for LuxWash Premium Laundry services in Jaipur. Learn how we collect, use, and protect your personal information.",
+  alternates: { canonical: "https://luxurylaundryjaipur.com/privacy" },
 };
 
 export default function PrivacyPolicyPage() {

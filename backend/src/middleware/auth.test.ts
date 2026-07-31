@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { authenticate, type AuthRequest } from "./auth";
+
+const TEST_JWT_SECRET = "test-secret-for-unit-tests-only";
+
+// Set the env var before importing auth module so JWT_SECRET is read correctly
+process.env.JWT_SECRET = TEST_JWT_SECRET;
 
 const mocks = vi.hoisted(() => ({
   findUnique: vi.fn(),
@@ -13,6 +17,8 @@ vi.mock("../lib/prisma", () => ({
     },
   },
 }));
+
+import { authenticate, type AuthRequest } from "./auth";
 
 function createResponse() {
   const res = {
@@ -30,7 +36,7 @@ describe("authenticate", () => {
   it("uses the current database role instead of a stale token role", async () => {
     const token = jwt.sign(
       { id: "user-1", email: "owner@example.com", role: "ADMIN", name: "Owner" },
-      "luxwash-secret-key-2024"
+      TEST_JWT_SECRET
     );
     mocks.findUnique.mockResolvedValue({
       id: "user-1",

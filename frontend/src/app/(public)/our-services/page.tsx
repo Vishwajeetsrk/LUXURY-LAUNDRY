@@ -3,9 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Services | LUXURY LAUNDRY",
+  title: "Our Services",
   description:
-    "Explore our premium laundry services: Wash & Fold at ₹145/kg, Wash & Steam Iron at ₹165/kg, Dry Cleaning and more in Jaipur.",
+    "Explore our premium laundry services in Jaipur: Wash & Fold at ₹145/kg, Wash & Steam Iron at ₹165/kg, Dry Cleaning, Stain Removal, and more. Free pickup & delivery on orders above ₹4,999.",
+  keywords: ["laundry services Jaipur", "wash and fold", "dry cleaning", "steam iron laundry", "stain removal"],
+  alternates: { canonical: "https://luxurylaundryjaipur.com/our-services" },
 };
 
 const services = [

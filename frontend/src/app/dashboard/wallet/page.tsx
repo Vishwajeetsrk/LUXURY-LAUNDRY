@@ -74,7 +74,7 @@ export default function WalletPage() {
 
         {/* Info Card */}
         <div className="md:col-span-2 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col justify-center">
-          <h3 className="font-bold text-gray-900 mb-2 text-lg">How Wallet Works</h3>
+          <h2 className="font-bold text-gray-900 mb-2 text-lg">How Wallet Works</h2>
           <ul className="space-y-3">
             <li className="flex items-start gap-3 text-sm text-gray-600">
               <div className="mt-0.5 bg-green-100 text-green-600 p-1 rounded-full"><i className="fa-solid fa-check text-[10px]"></i></div>
@@ -91,16 +91,16 @@ export default function WalletPage() {
           </ul>
           
           <div className="mt-6 pt-6 border-t border-gray-100">
-            <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+            <h3 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
               <i className="fa-solid fa-qrcode text-primary-500"></i> Add Funds to Wallet
-            </h4>
+            </h3>
             <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
               <div className="w-24 h-24 bg-white p-2 rounded-lg shadow-sm border border-gray-200 flex-shrink-0 relative overflow-hidden">
                 <img src="/images/upi_qr.png" alt="UPI QR Code" className="w-full h-full object-contain" />
               </div>
               <div>
                 <p className="text-sm text-gray-700 font-medium mb-1">Scan the QR code using any UPI app to pay.</p>
-                <p className="text-sm text-gray-900 font-bold mb-3">UPI ID: khushalkhandelwal927@okicici</p>
+                <p className="text-sm text-gray-900 font-bold mb-3">UPI ID: luxwash@upi</p>
                 <div className="bg-blue-50 text-blue-700 p-2.5 rounded-lg text-xs flex items-start gap-2 shadow-sm border border-blue-100">
                   <i className="fa-brands fa-whatsapp mt-0.5 text-blue-600 text-sm"></i>
                   <span>Send a screenshot of your payment to the admin on WhatsApp. Credits will be reflected here after confirmation.</span>

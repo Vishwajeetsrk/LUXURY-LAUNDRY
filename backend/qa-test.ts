@@ -16,8 +16,8 @@ async function runTests() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: "vishwajeetsrk@gmail.com",
-        password: "12345678"
+        email: "admin@luxwash.com",
+        password: "Admin@12345"
       })
     });
     const adminData: any = await adminRes.json();
@@ -63,7 +63,7 @@ async function runTests() {
       body: JSON.stringify({
         name: "E2E Test User",
         email: email,
-        password: "password123",
+        password: "TestUser@123",
         phone: "1234567890"
       })
     });

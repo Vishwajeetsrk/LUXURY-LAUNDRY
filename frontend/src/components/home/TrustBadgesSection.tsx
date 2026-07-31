@@ -5,27 +5,27 @@ import { motion } from "framer-motion";
 
 const trustItems = [
   {
-    icon: <i className="fa-solid fa-shield-halved text-green-500" />,
+    icon: <i className="fa-solid fa-shield-halved text-green-500" aria-hidden="true" />,
     title: "100% Safe & Hygienic Cleaning",
   },
   {
-    icon: <i className="fa-solid fa-bolt text-yellow-500" />,
+    icon: <i className="fa-solid fa-bolt text-yellow-500" aria-hidden="true" />,
     title: "24–48 Hour Express Service",
   },
   {
-    icon: <i className="fa-solid fa-truck-fast text-blue-500" />,
+    icon: <i className="fa-solid fa-truck-fast text-blue-500" aria-hidden="true" />,
     title: "Free Pickup & Drop on Orders Above ₹4,999",
   },
   {
-    icon: <i className="fa-solid fa-wallet text-purple-500" />,
+    icon: <i className="fa-solid fa-wallet text-purple-500" aria-hidden="true" />,
     title: "₹100 Pickup Charge for Orders up to ₹4,999",
   },
   {
-    icon: <i className="fa-solid fa-headset text-orange-500" />,
+    icon: <i className="fa-solid fa-headset text-orange-500" aria-hidden="true" />,
     title: "Trusted Customer Service",
   },
   {
-    icon: <i className="fa-solid fa-wand-magic-sparkles text-pink-500" />,
+    icon: <i className="fa-solid fa-wand-magic-sparkles text-pink-500" aria-hidden="true" />,
     title: "Premium Fabric Care",
   },
 ];
@@ -65,10 +65,10 @@ export default function TrustBadgesSection() {
           <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-3">
             Trusted By Thousands Of Happy Customers
           </h2>
-          <h3 className="text-gray-600 text-lg font-medium mb-4 max-w-2xl mx-auto lg:mx-0">
+          <p className="text-gray-600 text-lg font-medium mb-4 max-w-2xl mx-auto lg:mx-0">
             We provide premium laundry services with quality, trust and customer
             satisfaction at every step.
-          </h3>
+          </p>
           <Link
             href="/our-services"
             className="inline-flex items-center gap-2 text-primary-500 font-bold hover:text-primary-600 text-sm transition-colors duration-200 group"
@@ -92,7 +92,7 @@ export default function TrustBadgesSection() {
               variants={itemVariants}
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:shadow-primary-500/10 hover:border-primary-200 transition-colors duration-200 cursor-pointer flex flex-col items-center justify-center gap-3 min-h-[140px]"
+              className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:shadow-primary-500/10 hover:border-primary-200 transition-colors duration-200 flex flex-col items-center justify-center gap-3 min-h-[140px]"
             >
               <div className="text-3xl bg-gray-50 w-14 h-14 rounded-full flex items-center justify-center mb-1">
                 {item.icon}

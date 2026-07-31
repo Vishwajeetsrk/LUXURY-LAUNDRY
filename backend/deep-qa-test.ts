@@ -25,7 +25,7 @@ async function runDeepTests() {
     const adminRes = await fetch(`${API}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "vishwajeetsrk@gmail.com", password: "12345678" })
+      body: JSON.stringify({ email: "admin@luxwash.com", password: "Admin@12345" })
     });
     const adminData: any = await adminRes.json();
     assert(adminRes.ok, `Admin login failed: ${adminData.message}`);
@@ -91,7 +91,7 @@ async function runDeepTests() {
       body: JSON.stringify({
         name: "Deep E2E User",
         email: email,
-        password: "password123",
+        password: "TestUser@123",
         phone: "9876543210"
       })
     });
