@@ -26,6 +26,7 @@ const sidebarLinks: { href: string; label: string; icon: string; permission: Per
   { href: "/admin/whatsapp", label: "WhatsApp Logs", icon: "fa-brands fa-whatsapp", permission: "whatsapp:read" },
   { href: "/admin/content", label: "Content", icon: "fa-solid fa-pen-to-square", permission: "content:write" },
   { href: "/admin/contacts", label: "Inquiries", icon: "fa-solid fa-envelope", permission: "contacts:read" },
+  { href: "/admin/reviews", label: "Reviews", icon: "fa-solid fa-star", permission: "reviews:read" },
   { href: "/admin/settings", label: "Settings", icon: "fa-solid fa-gear", permission: "settings:write" },
 ];
 

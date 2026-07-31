@@ -25,6 +25,8 @@ export const PERMISSIONS = [
   "settings:read",
   "settings:write",
   "whatsapp:read",
+  "reviews:read",
+  "reviews:write",
   "users:assign-super-admin",
 ] as const;
 

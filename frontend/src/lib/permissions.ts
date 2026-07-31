@@ -27,6 +27,8 @@ export const PERMISSIONS = [
   "settings:read",
   "settings:write",
   "whatsapp:read",
+  "reviews:read",
+  "reviews:write",
   "users:assign-super-admin",
 ] as const;
 
@@ -67,6 +69,7 @@ export const ADMIN_ROUTE_PERMISSIONS: Record<string, Permission> = {
   "/admin/whatsapp": "whatsapp:read",
   "/admin/content": "content:write",
   "/admin/contacts": "contacts:read",
+  "/admin/reviews": "reviews:read",
   "/admin/settings": "settings:write",
 };
 

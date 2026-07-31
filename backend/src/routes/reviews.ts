@@ -82,7 +82,7 @@ router.patch("/:id", authenticate, requirePermission("reviews:write"), async (re
     }
 
     const review = await prisma.review.update({
-      where: { id: req.params.id },
+      where: { id: String(req.params.id) },
       data: { isPublished }
     });
 
@@ -97,7 +97,7 @@ router.patch("/:id", authenticate, requirePermission("reviews:write"), async (re
 router.delete("/:id", authenticate, requirePermission("reviews:write"), async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     await prisma.review.delete({
-      where: { id: req.params.id }
+      where: { id: String(req.params.id) }
     });
     res.json({ message: "Review deleted" });
   } catch (err) {

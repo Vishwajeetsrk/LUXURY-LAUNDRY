@@ -26,10 +26,10 @@ import walletRoutes from "./routes/wallet";
 import offerRoutes from "./routes/offers";
 import settingRoutes from "./routes/settings";
 import priceListRoutes from "./routes/priceList";
-import { reportsRoutes } from './routes/reports';
-import { uploadRoutes } from './routes/upload';
-import { deliveryRoutes } from './routes/delivery';
-import { reviewsRoutes } from './routes/reviews';
+import reportsRoutes from './routes/reports';
+import uploadRoutes from './routes/upload';
+import deliveryRoutes from './routes/delivery';
+import reviewsRoutes from './routes/reviews';
 import logger from "./lib/logger";
 
 const app = express();
