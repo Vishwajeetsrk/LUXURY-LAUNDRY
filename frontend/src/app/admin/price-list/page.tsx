@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { API_URL } from "@/lib/api";
 
 interface PriceListItem {
   id: string;
@@ -44,7 +45,7 @@ export default function AdminPriceList() {
 
   const fetchItems = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/price-list`);
+      const res = await fetch(`${API_URL}/api/price-list`);
       if (res.ok) {
         const data = await res.json();
         setItems(data);
@@ -69,7 +70,7 @@ export default function AdminPriceList() {
     formDataUpload.append("image", file);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/upload`, {
+      const res = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formDataUpload,
@@ -93,8 +94,8 @@ export default function AdminPriceList() {
     const token = localStorage.getItem("token");
     const method = isEditing ? "PUT" : "POST";
     const url = isEditing 
-      ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/price-list/${formData.id}`
-      : `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/price-list`;
+      ? `${API_URL}/api/price-list/${formData.id}`
+      : `${API_URL}/api/price-list`;
 
     try {
       const res = await fetch(url, {
@@ -122,7 +123,7 @@ export default function AdminPriceList() {
     if (!confirm("Are you sure you want to delete this item?")) return;
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/price-list/${id}`, {
+      const res = await fetch(`${API_URL}/api/price-list/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

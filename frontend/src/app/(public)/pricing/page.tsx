@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { API_URL } from "@/lib/api";
 
 // Define our design classes for dynamic packages based on index
 const packageStyles = [
@@ -24,7 +25,6 @@ export default function PricingPage() {
   useEffect(() => {
     async function fetchPackages() {
       try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         const [pkgRes, listRes] = await Promise.all([
           fetch(`${API_URL}/api/packages`),
           fetch(`${API_URL}/api/price-list`)
@@ -70,7 +70,6 @@ export default function PricingPage() {
 
     setLoadingPlan(plan.name);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const numericPrice = plan.price.replace(/,/g, '');
       
       const res = await fetch(`${API_URL}/api/subscriptions`, {

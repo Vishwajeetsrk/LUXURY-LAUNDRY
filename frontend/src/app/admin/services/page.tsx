@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
+import { API_URL } from "@/lib/api";
 
 interface Service {
   id: string;
@@ -24,7 +25,7 @@ export default function AdminServicesPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [addForm, setAddForm] = useState({ name: "", description: "", pricePerUnit: 0, originalPrice: "", unit: "kg", imageUrl: "" });
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchServices = useCallback(async () => {
     try {

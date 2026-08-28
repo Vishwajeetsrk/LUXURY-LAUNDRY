@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 interface Review {
   id: string;
@@ -17,8 +18,7 @@ export default function TestimonialsSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    fetch(`${API}/api/reviews`)
+    fetch(`${API_URL}/api/reviews`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 export default function CustomerInvoicesPage() {
   const [invoices, setInvoices] = useState<any[]>([]);
@@ -9,8 +10,6 @@ export default function CustomerInvoicesPage() {
   useEffect(() => {
     const fetchInvoices = async () => {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      
       try {
         const res = await fetch(`${API_URL}/api/invoices/customer/me`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -30,7 +29,6 @@ export default function CustomerInvoicesPage() {
 
   const downloadInvoice = async (id: string, number: string) => {
     const token = localStorage.getItem("token");
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     try {
       const res = await fetch(`${API_URL}/api/invoices/${id}/pdf`, {
         headers: { Authorization: `Bearer ${token}` }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
+import { API_URL } from "@/lib/api";
 
 interface Offer {
   id: string;
@@ -29,7 +30,7 @@ export default function AdminOffersPage() {
     discountValue: 0, minOrderValue: 0, maxDiscount: "", usageLimit: "" 
   });
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchOffers = useCallback(async () => {
     try {

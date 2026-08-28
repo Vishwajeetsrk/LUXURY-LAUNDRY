@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
+import { API_URL } from "@/lib/api";
 
 interface Package {
   id: string;
@@ -24,7 +25,7 @@ export default function AdminPackagesPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [addForm, setAddForm] = useState({ name: "", description: "", price: 0, walletCredits: 0, discountPercentage: 0, features: "[]" });
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchPackages = useCallback(async () => {
     try {

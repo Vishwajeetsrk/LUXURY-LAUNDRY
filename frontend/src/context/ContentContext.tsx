@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { API_URL } from "@/lib/api";
 
 interface ContentItem {
   key: string;
@@ -47,26 +48,12 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       Promise.resolve().then(() => setIsLoading(false));
     };
 
-    const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
-    const fallbackApiUrl =
-      typeof window !== "undefined" ? window.location.origin : "";
-    const apiBase = configuredApiUrl || fallbackApiUrl;
-
-    if (!apiBase) {
+    if (!API_URL) {
       stopLoadingSafely();
       return;
     }
 
-    let contentEndpoint: string;
-    try {
-      contentEndpoint = new URL("/api/content", apiBase).toString();
-    } catch {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn("Invalid NEXT_PUBLIC_API_URL, using default content.");
-      }
-      stopLoadingSafely();
-      return;
-    }
+    const contentEndpoint = `${API_URL}/api/content`;
 
     const abortController = new AbortController();
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
 import { assignableRoles, ROLE_LABELS } from "@/lib/permissions";
+import { API_URL } from "@/lib/api";
 
 interface Customer {
   id: string;
@@ -30,7 +31,7 @@ export default function AdminCustomersPage() {
   const [adjustWalletId, setAdjustWalletId] = useState<string | null>(null);
   const [walletForm, setWalletForm] = useState({ amount: 0, type: "CREDIT", description: "" });
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchCustomers = useCallback(async () => {
     try {

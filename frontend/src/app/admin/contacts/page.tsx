@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 interface Contact {
   id: string;
@@ -17,7 +18,7 @@ export default function AdminContactsPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Contact | null>(null);
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchContacts = useCallback(async () => {
     try {

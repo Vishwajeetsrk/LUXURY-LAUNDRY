@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 export default function SubscriptionsAdminPage() {
   const [requests, setRequests] = useState<any[]>([]);
@@ -10,7 +11,6 @@ export default function SubscriptionsAdminPage() {
   const fetchRequests = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${API_URL}/api/subscriptions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -34,7 +34,6 @@ export default function SubscriptionsAdminPage() {
   const handleUpdate = async (id: string, status: "APPROVED" | "REJECTED") => {
     try {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const res = await fetch(`${API_URL}/api/subscriptions/${id}`, {
         method: "PATCH",
         headers: { 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCart } from "../../../context/CartContext";
 import { Skeleton } from "../../../components/ui/Skeleton";
 import { EmptyState } from "../../../components/ui/EmptyState";
+import { API_URL } from "@/lib/api";
 
 const products = [
   {
@@ -119,10 +120,8 @@ export default function ShopPage() {
 
     const load = async () => {
       try {
-        const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
         // 1) Try shop-products first
-        const shopRes = await fetch(`${API}/api/shop-products`);
+        const shopRes = await fetch(`${API_URL}/api/shop-products`);
         if (!shopRes.ok) throw new Error(`shop-products failed: ${shopRes.status}`);
 
         const shopData = await shopRes.json();
@@ -148,7 +147,7 @@ export default function ShopPage() {
         }
 
         // 2) Fallback to active services
-        const servicesRes = await fetch(`${API}/api/services`);
+        const servicesRes = await fetch(`${API_URL}/api/services`);
         if (!servicesRes.ok) throw new Error(`services failed: ${servicesRes.status}`);
 
         const sData = await servicesRes.json();

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { io, Socket } from "socket.io-client";
+import { API_URL } from "@/lib/api";
 
 interface DashboardStats {
   totalOrders: number;
@@ -60,7 +61,7 @@ export default function AdminDashboard() {
 
   const handleDownloadReport = (type: "pdf" | "excel") => {
     const token = localStorage.getItem("token");
-    let url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/reports/${type}?token=${token}`;
+    let url = `${API_URL}/api/reports/${type}?token=${token}`;
     if (dateRange.startDate && dateRange.endDate) {
       url += `&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`;
     }
@@ -90,7 +91,7 @@ export default function AdminDashboard() {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/dashboard/stats`,
+        `${API_URL}/api/dashboard/stats`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (res.ok) {
@@ -108,7 +109,6 @@ export default function AdminDashboard() {
     fetchStats();
     
     // Set up Socket.IO connection for real-time updates
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     const token = localStorage.getItem("token");
     
     let socket: Socket;

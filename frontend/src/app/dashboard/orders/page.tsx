@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 export default function CustomerOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -12,8 +13,6 @@ export default function CustomerOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      
       try {
         const res = await fetch(`${API_URL}/api/orders`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -34,7 +33,6 @@ export default function CustomerOrdersPage() {
   const downloadInvoice = async (invoiceId: string) => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     try {
       const res = await fetch(`${API_URL}/api/invoices/${invoiceId}/pdf`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -57,7 +55,6 @@ export default function CustomerOrdersPage() {
     const token = localStorage.getItem("token");
     if (!token) return;
     setSubmittingReview(true);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     try {
       const res = await fetch(`${API_URL}/api/reviews`, {
         method: "POST",

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { usePanelUser } from "@/hooks/usePanelUser";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { API_URL } from "@/lib/api";
 
 interface Review {
   id: string;
@@ -23,7 +24,7 @@ export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchReviews = useCallback(async () => {
     try {

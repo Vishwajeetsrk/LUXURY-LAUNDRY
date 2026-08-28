@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "@/lib/api";
 
 export default function DashboardOverview() {
   const [stats, setStats] = useState({ totalOrders: 0, activeOrders: 0, totalSpent: 0 });
@@ -11,8 +12,6 @@ export default function DashboardOverview() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      
       try {
         const res = await fetch(`${API_URL}/api/orders?limit=5`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -39,7 +38,6 @@ export default function DashboardOverview() {
   const downloadInvoice = async (invoiceId: string) => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     try {
       const res = await fetch(`${API_URL}/api/invoices/${invoiceId}/pdf`, {
         headers: { Authorization: `Bearer ${token}` }

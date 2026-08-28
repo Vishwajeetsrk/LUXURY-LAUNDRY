@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { API_URL } from "@/lib/api";
 
 const statusColors: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
@@ -75,7 +76,7 @@ export default function AdminOrdersPage() {
   const [editForm, setEditForm] = useState<Partial<Order>>({});
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -121,7 +122,6 @@ export default function AdminOrdersPage() {
     fetchCustomers();
     
     // Set up Socket.IO connection for real-time updates
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     const token = localStorage.getItem("token");
     
     let socket: Socket;

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 const statusSteps = [
   "PENDING",
@@ -34,8 +35,6 @@ export default function OrderDetailsPage() {
     const fetchOrder = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      
       try {
         // Fetch all orders and find this one (since we don't have a specific GET /orders/:id for customers yet)
         const res = await fetch(`${API_URL}/api/orders`, {
@@ -65,7 +64,6 @@ export default function OrderDetailsPage() {
   const downloadInvoice = async (invoiceId: string) => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     try {
       const res = await fetch(`${API_URL}/api/invoices/${invoiceId}/pdf`, {
         headers: { Authorization: `Bearer ${token}` }

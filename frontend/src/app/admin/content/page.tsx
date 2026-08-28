@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 interface ContentItem {
   key: string;
@@ -28,7 +29,7 @@ export default function AdminContentPage() {
   const [saving, setSaving] = useState(false);
   const [savedKey, setSavedKey] = useState<string | null>(null);
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchContent = useCallback(async () => {
     try {

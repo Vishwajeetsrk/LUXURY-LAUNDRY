@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { addressesToFormStrings, formatAddress, parseFormAddresses, type AddressEntry } from "@/lib/address";
+import { API_URL } from "@/lib/api";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -15,8 +16,6 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      
       try {
         const res = await fetch(`${API_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -41,8 +40,6 @@ export default function ProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     const token = localStorage.getItem("token");
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    
     try {
       const res = await fetch(`${API_URL}/api/auth/me`, {
         method: "PATCH",

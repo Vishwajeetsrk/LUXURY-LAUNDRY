@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/invoices";
+import { API_URL } from "@/lib/api";
 
 interface WhatsAppLog {
   id: string;
@@ -29,8 +30,7 @@ export default function WhatsAppLogsPage() {
     if (!confirm("Delete this WhatsApp log?")) return;
     try {
       const token = localStorage.getItem("token");
-      const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      await fetch(`${API}/api/whatsapp/logs/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
+      await fetch(`${API_URL}/api/whatsapp/logs/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
       setLogs((prev) => prev.filter((l) => l.id !== id));
     } catch { /* ignore */ }
   };

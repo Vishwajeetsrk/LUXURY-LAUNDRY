@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 interface ShopProduct {
   id: string;
@@ -63,7 +64,7 @@ export default function AdminShopPage() {
     sortOrder: 0,
   });
 
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = API_URL;
 
   const fetchProducts = useCallback(async () => {
     try {

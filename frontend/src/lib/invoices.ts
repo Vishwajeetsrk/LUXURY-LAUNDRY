@@ -1,4 +1,5 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { API_URL } from "./api";
+export { API_URL };
 
 export interface InvoiceItem {
   id: string;

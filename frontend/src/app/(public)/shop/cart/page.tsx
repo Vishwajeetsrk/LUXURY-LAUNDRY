@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../../../context/CartContext";
+import { API_URL } from "@/lib/api";
 
 export default function CartPage() {
   const { cart, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -37,7 +38,6 @@ export default function CartPage() {
         return;
       }
       try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         const res = await fetch(`${API_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -69,7 +69,6 @@ export default function CartPage() {
 
     const fetchOffers = async () => {
       try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         const res = await fetch(`${API_URL}/api/offers`);
         if (res.ok) {
           const data = await res.json();
@@ -143,7 +142,7 @@ export default function CartPage() {
       try {
         const token = localStorage.getItem("token");
         const updatedAddresses = [...addresses, newAddress];
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/customers/me/addresses`, {
+        await fetch(`${API_URL}/api/customers/me/addresses`, {
           method: "PUT",
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
           body: JSON.stringify({ addresses: updatedAddresses })
@@ -164,8 +163,6 @@ export default function CartPage() {
     }
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      
       let deliveryChargeApplied = false;
       const deliveryCharge = cartTotal < 4999 ? 100 : 0;
 
